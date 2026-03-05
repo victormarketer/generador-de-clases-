@@ -1,74 +1,147 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>Generador de Clases para Células</title>
+  <meta charset="UTF-8">
+  <!-- ✅ CLAVE para que se vea bien en celular -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<style>
-body{
-  font-family:Arial;
-  background:#0f172a;
-  color:white;
-  text-align:center;
-  padding:40px;
-}
+  <title>Generador de Clases para Células</title>
 
-input{
-  width:300px;
-  padding:10px;
-  margin:10px;
-}
+  <style>
+    :root{
+      --bg:#0f172a;
+      --card:#111827;
+      --accent:#22c55e;
+      --accent2:#16a34a;
+      --text:#ffffff;
+      --muted:rgba(255,255,255,.8);
+    }
 
-button{
-  padding:12px 20px;
-  background:#22c55e;
-  border:none;
-  color:white;
-  font-size:16px;
-  cursor:pointer;
-  margin:6px;
-}
+    *{ box-sizing:border-box; }
 
-textarea{
-  width:80%;
-  height:300px;
-  margin-top:20px;
-  padding:20px;
-}
-</style>
+    body{
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      text-align:center;
+      padding: 28px 14px;
+      margin:0;
+    }
+
+    /* ✅ Contenedor para que no quede mini en celular */
+    .container{
+      width: min(920px, 100%);
+      margin: 0 auto;
+    }
+
+    h1{
+      margin: 0 0 10px;
+      font-size: clamp(24px, 5vw, 40px);
+      letter-spacing: .2px;
+    }
+
+    p{
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: clamp(14px, 3.5vw, 18px);
+      line-height: 1.35;
+    }
+
+    input{
+      width: min(640px, 100%);
+      padding: 14px 14px;
+      margin: 10px 0 14px;
+      font-size: 16px; /* ✅ evita zoom raro en iPhone */
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.15);
+      outline: none;
+    }
+
+    button{
+      padding: 14px 18px;
+      background: var(--accent);
+      border: none;
+      color: white;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      border-radius: 10px;
+      margin: 6px;
+      width: min(260px, 100%);
+    }
+
+    button:hover{ background: var(--accent2); }
+
+    /* ✅ Área de resultado responsiva y más grande en móvil */
+    textarea{
+      width: 100%;
+      height: clamp(240px, 40vh, 520px);
+      margin-top: 18px;
+      padding: 16px;
+      font-size: 15px;
+      line-height: 1.45;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.15);
+      resize: vertical;
+    }
+
+    /* ✅ Botonera: en desktop en fila, en celular apilada */
+    .btns{
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    /* ✅ Ajustes específicos para pantallas chicas */
+    @media (max-width: 520px){
+      body{ padding: 22px 12px; }
+      button{
+        width: 100%;
+        max-width: 520px;
+      }
+      .btns{
+        flex-direction: column;
+        align-items: stretch;
+      }
+      textarea{
+        height: 46vh;
+      }
+    }
+  </style>
 </head>
 
 <body>
+  <div class="container">
+    <h1>Generador de Clases para Células</h1>
+    <p>Escribe el tema y la IA creará una clase completa</p>
 
-<h1>Generador de Clases para Células</h1>
+    <input id="tema" placeholder="Ej: Restauración familiar">
 
-<p>Escribe el tema y la IA creará una clase completa</p>
+    <div>
+      <button onclick="generar()">Generar Clase</button>
+    </div>
 
-<input id="tema" placeholder="Ej: Restauración familiar">
+    <textarea id="resultado" placeholder="Aquí aparecerá tu clase..."></textarea>
 
-<br>
+    <div class="btns">
+      <button onclick="descargarTXT()">Descargar TXT</button>
+      <button onclick="descargarPDF()">Descargar PDF</button>
+    </div>
+  </div>
 
-<button onclick="generar()">Generar Clase</button>
+  <script>
+    async function generar() {
+      const tema = document.getElementById("tema").value.trim();
+      const resultado = document.getElementById("resultado");
 
-<br>
+      if (!tema) {
+        resultado.value = "Escribe un tema primero.";
+        return;
+      }
 
-<textarea id="resultado"></textarea>
-
-<br>
-<button onclick="descargarTXT()">Descargar TXT</button>
-<button onclick="descargarPDF()">Descargar PDF</button>
-
-<script>
-async function generar() {
-  const tema = document.getElementById("tema").value.trim();
-  const resultado = document.getElementById("resultado");
-
-  if (!tema) {
-    resultado.value = "Escribe un tema primero.";
-    return;
-  }
-
-  const prompt = `
+      const prompt = `
 Crea una clase para una célula cristiana.
 
 Tema: ${tema}
@@ -81,101 +154,93 @@ Estructura:
 5) Oración final
 `;
 
-  resultado.value = "Generando...";
+      resultado.value = "Generando...";
 
-  try {
-    const respuesta = await fetch("/api/generate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ prompt })
-    });
+      try {
+        const respuesta = await fetch("/api/generate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt })
+        });
 
-    const data = await respuesta.json().catch(() => ({}));
+        const data = await respuesta.json().catch(() => ({}));
 
-    if (!respuesta.ok) {
-      resultado.value =
-        "ERROR: " + (data.error || "No se pudo generar") + "\n\n" +
-        "DETALLES:\n" + JSON.stringify(data.details || data, null, 2);
-      return;
+        if (!respuesta.ok) {
+          resultado.value =
+            "ERROR: " + (data.error || "No se pudo generar") + "\n\n" +
+            "DETALLES:\n" + JSON.stringify(data.details || data, null, 2);
+          return;
+        }
+
+        resultado.value = data.text || "No llegó texto desde Gemini.";
+      } catch (e) {
+        resultado.value = "Error de conexión: " + e.message;
+      }
     }
 
-    resultado.value = data.text || "No llegó texto desde Gemini.";
-  } catch (e) {
-    resultado.value = "Error de conexión: " + e.message;
-  }
-}
+    function descargarTXT() {
+      const contenido = document.getElementById("resultado").value || "";
+      if (!contenido.trim()) {
+        alert("Primero genera una clase para poder descargarla.");
+        return;
+      }
 
-function descargarTXT() {
-  const contenido = document.getElementById("resultado").value || "";
-  if (!contenido.trim()) {
-    alert("Primero genera una clase para poder descargarla.");
-    return;
-  }
+      const blob = new Blob([contenido], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
 
-  const blob = new Blob([contenido], { type: "text/plain;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "clase-celula.txt";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
 
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "clase-celula.txt";
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
+      URL.revokeObjectURL(url);
+    }
 
-  URL.revokeObjectURL(url);
-}
+    function descargarPDF() {
+      const contenido = document.getElementById("resultado").value || "";
+      if (!contenido.trim()) {
+        alert("Primero genera una clase para poder descargarla.");
+        return;
+      }
 
-function descargarPDF() {
-  const contenido = document.getElementById("resultado").value || "";
-  if (!contenido.trim()) {
-    alert("Primero genera una clase para poder descargarla.");
-    return;
-  }
+      const win = window.open("", "_blank");
+      const safe = escapeHtml(contenido).replace(/\n/g, "<br>");
 
-  // Abrimos una ventana con HTML simple y usamos la impresión "Guardar como PDF"
-  const win = window.open("", "_blank");
-  const safe = escapeHtml(contenido).replace(/\n/g, "<br>");
+      win.document.open();
+      win.document.write(`
+        <!DOCTYPE html>
+        <html lang="es">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <title>Clase para Célula</title>
+          <style>
+            body{ font-family: Arial, sans-serif; padding: 24px; line-height: 1.5; }
+            h1{ margin-top: 0; }
+          </style>
+        </head>
+        <body>
+          <h1>Clase para Célula</h1>
+          <div>${safe}</div>
+          <script>
+            window.onload = () => { window.print(); };
+          <\/script>
+        </body>
+        </html>
+      `);
+      win.document.close();
+    }
 
-  win.document.open();
-  win.document.write(`
-    <!DOCTYPE html>
-    <html lang="es">
-    <head>
-      <meta charset="UTF-8">
-      <title>Clase para Célula</title>
-      <style>
-        body{ font-family: Arial, sans-serif; padding: 24px; line-height: 1.5; }
-        h1{ margin-top: 0; }
-        .box{ white-space: normal; }
-      </style>
-    </head>
-    <body>
-      <h1>Clase para Célula</h1>
-      <div class="box">${safe}</div>
-      <script>
-        window.onload = () => {
-          window.print();
-        };
-      <\/script>
-    </body>
-    </html>
-  `);
-  win.document.close();
-}
-
-function escapeHtml(str) {
-  return str
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-</script>
-
+    function escapeHtml(str) {
+      return (str || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+  </script>
 </body>
 </html>
-</body>
-
-</html>
-
