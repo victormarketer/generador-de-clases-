@@ -5,37 +5,36 @@
 <title>Generador de Clases para Células</title>
 
 <style>
-
 body{
-font-family:Arial;
-background:#0f172a;
-color:white;
-text-align:center;
-padding:40px;
+  font-family:Arial;
+  background:#0f172a;
+  color:white;
+  text-align:center;
+  padding:40px;
 }
 
 input{
-width:300px;
-padding:10px;
-margin:10px;
+  width:300px;
+  padding:10px;
+  margin:10px;
 }
 
 button{
-padding:12px 20px;
-background:#22c55e;
-border:none;
-color:white;
-font-size:16px;
-cursor:pointer;
+  padding:12px 20px;
+  background:#22c55e;
+  border:none;
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+  margin:6px;
 }
 
 textarea{
-width:80%;
-height:300px;
-margin-top:20px;
-padding:20px;
+  width:80%;
+  height:300px;
+  margin-top:20px;
+  padding:20px;
 }
-
 </style>
 </head>
 
@@ -55,8 +54,11 @@ padding:20px;
 
 <textarea id="resultado"></textarea>
 
+<br>
+<button onclick="descargarTXT()">Descargar TXT</button>
+<button onclick="descargarPDF()">Descargar PDF</button>
+
 <script>
-  
 async function generar() {
   const tema = document.getElementById("tema").value.trim();
   const resultado = document.getElementById("resultado");
@@ -90,7 +92,6 @@ Estructura:
 
     const data = await respuesta.json().catch(() => ({}));
 
-    // Si la API respondió con error, lo mostramos
     if (!respuesta.ok) {
       resultado.value =
         "ERROR: " + (data.error || "No se pudo generar") + "\n\n" +
@@ -98,15 +99,83 @@ Estructura:
       return;
     }
 
-    // Si salió bien
     resultado.value = data.text || "No llegó texto desde Gemini.";
   } catch (e) {
     resultado.value = "Error de conexión: " + e.message;
   }
 }
 
+function descargarTXT() {
+  const contenido = document.getElementById("resultado").value || "";
+  if (!contenido.trim()) {
+    alert("Primero genera una clase para poder descargarla.");
+    return;
+  }
+
+  const blob = new Blob([contenido], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "clase-celula.txt";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+
+  URL.revokeObjectURL(url);
+}
+
+function descargarPDF() {
+  const contenido = document.getElementById("resultado").value || "";
+  if (!contenido.trim()) {
+    alert("Primero genera una clase para poder descargarla.");
+    return;
+  }
+
+  // Abrimos una ventana con HTML simple y usamos la impresión "Guardar como PDF"
+  const win = window.open("", "_blank");
+  const safe = escapeHtml(contenido).replace(/\n/g, "<br>");
+
+  win.document.open();
+  win.document.write(`
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+      <meta charset="UTF-8">
+      <title>Clase para Célula</title>
+      <style>
+        body{ font-family: Arial, sans-serif; padding: 24px; line-height: 1.5; }
+        h1{ margin-top: 0; }
+        .box{ white-space: normal; }
+      </style>
+    </head>
+    <body>
+      <h1>Clase para Célula</h1>
+      <div class="box">${safe}</div>
+      <script>
+        window.onload = () => {
+          window.print();
+        };
+      <\/script>
+    </body>
+    </html>
+  `);
+  win.document.close();
+}
+
+function escapeHtml(str) {
+  return str
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
 </script>
 
 </body>
+</html>
+</body>
 
 </html>
+
