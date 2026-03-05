@@ -14,7 +14,7 @@ module.exports = async (req, res) => {
       return res.status(400).json({ error: "Falta prompt" });
     }
 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
 
     const response = await fetch(url, {
       method: "POST",
@@ -47,3 +47,4 @@ module.exports = async (req, res) => {
     return res.status(500).json({ error: "Error interno", details: String(e) });
   }
 };
+
