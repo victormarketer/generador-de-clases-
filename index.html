@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Generador de Clases para Células</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#0f172a;
+color:white;
+text-align:center;
+padding:40px;
+}
+
+input{
+width:300px;
+padding:10px;
+margin:10px;
+}
+
+button{
+padding:12px 20px;
+background:#22c55e;
+border:none;
+color:white;
+font-size:16px;
+cursor:pointer;
+}
+
+textarea{
+width:80%;
+height:300px;
+margin-top:20px;
+padding:20px;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>Generador de Clases para Células</h1>
+
+<p>Escribe el tema y la IA creará una clase completa</p>
+
+<input id="tema" placeholder="Ej: Restauración familiar">
+
+<br>
+
+<button onclick="generar()">Generar Clase</button>
+
+<br>
+
+<textarea id="resultado"></textarea>
+
+<script>
+
+async function generar(){
+
+let tema = document.getElementById("tema").value;
+
+let prompt = `
+Crea una clase para una célula cristiana.
+
+Tema: ${tema}
+
+Estructura:
+
+1 Introducción
+2 Desarrollo bíblico
+3 Aplicación práctica
+4 Preguntas para el grupo
+5 Oración final
+`;
+
+let respuesta = await fetch("/api/generate",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({prompt})
+});
+
+let data = await respuesta.json();
+
+document.getElementById("resultado").value = data.text;
+
+}
+
+</script>
+
+</body>
+</html>
