@@ -175,46 +175,58 @@
       display:none; /* lo mostramos según tab */
     }
 
-    .card{
-      width: 100%;
-      min-height: clamp(240px, 42vh, 560px);
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 14px;
-      padding: 18px 18px;
-      overflow:auto;
-      display:none; /* lo mostramos según tab */
-    }
+   /* Card (contenedor de la clase generada) */
+.card{
+  width: 100%;
+  min-height: clamp(240px, 42vh, 560px);
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 14px;
+  padding: 18px;
+  overflow: auto;
+  display: none; /* lo mostramos según tab */
+  font-size: 14px; /* 👈 tamaño base */
+}
 
-    /* Typography inside card */
-    .card h2{
-      margin: 14px 0 8px;
-      font-size: 20px;
-      border-left: 4px solid rgba(34,197,94,.7);
-      padding-left: 10px;
-    }
-    .card h3{
-      margin: 14px 0 8px;
-      font-size: 16px;
-      color: rgba(255,255,255,.92);
-    }
-    .card p{
-      margin: 8px 0;
-      color: rgba(255,255,255,.88);
-      line-height: 1.55;
-    }
-    .card hr{
-      border:none;
-      border-top: 1px solid rgba(255,255,255,.12);
-      margin: 14px 0;
-    }
-    .card ul, .card ol{
-      margin: 8px 0 12px 22px;
-      padding:0;
-      color: rgba(255,255,255,.88);
-      line-height: 1.55;
-    }
-    .card li{ margin: 4px 0; }
+/* Typography inside card */
+.card h2{
+  margin: 14px 0 8px;
+  font-size: 20px;
+  border-left: 4px solid rgba(34,197,94,.7);
+  padding-left: 10px;
+}
+
+.card h3{
+  margin: 14px 0 8px;
+  font-size: 16px;
+  color: rgba(255,255,255,.92);
+}
+
+.card p{
+  margin: 8px 0;
+  color: rgba(255,255,255,.88);
+  line-height: 1.55;
+  font-size: 14px;
+}
+
+.card hr{
+  border: none;
+  border-top: 1px solid rgba(255,255,255,.12);
+  margin: 14px 0;
+}
+
+.card ul, .card ol{
+  margin: 8px 0 12px 22px;
+  padding: 0;
+  color: rgba(255,255,255,.88);
+  line-height: 1.55;
+  font-size: 14px;
+}
+
+.card li{
+  margin: 4px 0;
+  font-size: 14px;
+}
     .badge{
       display:inline-block;
       padding: 6px 10px;
@@ -598,3 +610,4 @@ Estructura sugerida:
   </script>
 </body>
 </html>
+
