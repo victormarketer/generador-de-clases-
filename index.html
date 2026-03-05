@@ -56,40 +56,57 @@ padding:20px;
 <textarea id="resultado"></textarea>
 
 <script>
+  
+async function generar() {
+  const tema = document.getElementById("tema").value.trim();
+  const resultado = document.getElementById("resultado");
 
-async function generar(){
+  if (!tema) {
+    resultado.value = "Escribe un tema primero.";
+    return;
+  }
 
-let tema = document.getElementById("tema").value;
-
-let prompt = `
+  const prompt = `
 Crea una clase para una célula cristiana.
 
 Tema: ${tema}
 
 Estructura:
-
-1 Introducción
-2 Desarrollo bíblico
-3 Aplicación práctica
-4 Preguntas para el grupo
-5 Oración final
+1) Introducción
+2) Desarrollo bíblico
+3) Aplicación práctica
+4) Preguntas para el grupo
+5) Oración final
 `;
 
-let respuesta = await fetch("/api/generate",{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({prompt})
-});
+  resultado.value = "Generando...";
 
-let data = await respuesta.json();
+  try {
+    const respuesta = await fetch("/api/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt })
+    });
 
-document.getElementById("resultado").value = data.text;
+    const data = await respuesta.json().catch(() => ({}));
 
+    // Si la API respondió con error, lo mostramos
+    if (!respuesta.ok) {
+      resultado.value =
+        "ERROR: " + (data.error || "No se pudo generar") + "\n\n" +
+        "DETALLES:\n" + JSON.stringify(data.details || data, null, 2);
+      return;
+    }
+
+    // Si salió bien
+    resultado.value = data.text || "No llegó texto desde Gemini.";
+  } catch (e) {
+    resultado.value = "Error de conexión: " + e.message;
+  }
 }
 
 </script>
 
 </body>
+
 </html>
