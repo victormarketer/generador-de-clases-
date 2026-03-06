@@ -41,15 +41,249 @@ function sanitizeText(value, fallback = "") {
   return value.trim();
 }
 
-function construirPrompt({ tema, tipoContenido, contexto, tono, textoBase }) {
+function sanitizeCount(value, fallback = 4) {
+  const num = Number(value);
+  if (!Number.isFinite(num) || num <= 0) return fallback;
+  return Math.floor(num);
+}
+
+function construirPrompt({
+  tema,
+  tipoContenido,
+  contexto,
+  tono,
+  textoBase,
+  modoGeneracion,
+  cantidadSerie
+}) {
   const temaFinal = sanitizeText(tema);
   const tipoFinal = sanitizeText(tipoContenido, "celula");
   const contextoFinal = sanitizeText(contexto, "general");
   const tonoFinal = sanitizeText(tono, "pastoral");
+  const modoFinal = sanitizeText(modoGeneracion, "unico");
   const textoBaseFinal = sanitizeText(
     textoBase,
     "elige un texto bíblico apropiado y fiel al tema"
   );
+
+  let cantidadFinal = sanitizeCount(cantidadSerie, 4);
+
+  if (tipoFinal === "devocional") {
+    cantidadFinal = 7;
+  } else {
+    cantidadFinal = 4;
+  }
+
+  if (modoFinal === "serie") {
+    if (tipoFinal === "celula") {
+      return `
+Actúa como un pastor y maestro bíblico con amplia experiencia en discipulado, formación de líderes de células y enseñanza bíblica en la iglesia local.
+
+Debes crear una SERIE COMPLETA de ${cantidadFinal} clases para célula de contexto "${contextoFinal}".
+
+Tema general de la serie:
+${temaFinal}
+
+Tono de la serie:
+${tonoFinal}
+
+Texto bíblico base:
+${textoBaseFinal}
+
+INSTRUCCIONES IMPORTANTES
+
+Escribe en TEXTO LIMPIO.
+No uses Markdown.
+No uses símbolos como ###, ##, **, *, ni ---.
+No escribas como artículo académico.
+Escribe como material pastoral, claro, práctico y fácil de enseñar.
+
+Primero incluye:
+
+TITULO GENERAL DE LA SERIE
+OBJETIVO GENERAL DE LA SERIE
+IDEA CENTRAL DE LA SERIE
+
+Luego desarrolla ${cantidadFinal} clases consecutivas.
+
+Cada clase debe incluir obligatoriamente:
+
+TITULO
+OBJETIVO DE LA CLASE
+TEXTO BIBLICO BASE
+IDEA CENTRAL
+DINÁMICA DE APERTURA
+INTRODUCCIÓN
+DESARROLLO BÍBLICO EN 3 PUNTOS
+APLICACIÓN PRÁCTICA
+DESAFÍO DE LA SEMANA
+PREGUNTAS PARA EL GRUPO
+ORACIÓN FINAL
+
+REGLAS IMPORTANTES
+
+Cada clase debe avanzar de manera lógica sobre la anterior.
+La progresión debe sentirse conectada, pastoral y útil para una serie real.
+Incluye exactamente 4 preguntas para el grupo en cada clase.
+`;
+    }
+
+    if (tipoFinal === "sermon") {
+      return `
+Actúa como un predicador y maestro bíblico experimentado, con enfoque cristocéntrico, pastoral y fiel al texto.
+
+Debes crear una SERIE COMPLETA de ${cantidadFinal} sermones para el contexto "${contextoFinal}".
+
+Tema general de la serie:
+${temaFinal}
+
+Tono de la serie:
+${tonoFinal}
+
+Texto bíblico base:
+${textoBaseFinal}
+
+INSTRUCCIONES IMPORTANTES
+
+Escribe en TEXTO LIMPIO.
+No uses Markdown.
+No uses símbolos como ###, ##, **, *, ni ---.
+No escribas como artículo académico.
+Escribe como material real para predicar.
+
+Primero incluye:
+
+TITULO GENERAL DE LA SERIE
+OBJETIVO GENERAL DE LA SERIE
+IDEA CENTRAL DE LA SERIE
+
+Luego desarrolla ${cantidadFinal} sermones.
+
+Cada sermón debe incluir:
+
+TITULO
+OBJETIVO DEL SERMÓN
+TEXTO BÍBLICO BASE
+IDEA CENTRAL
+INTRODUCCIÓN
+CONTEXTO BÍBLICO
+DESARROLLO EN 3 PUNTOS
+APLICACIÓN PRÁCTICA
+CONCLUSIÓN
+LLAMADO FINAL
+
+REGLAS IMPORTANTES
+
+Cada sermón debe avanzar sobre el anterior.
+La serie debe sentirse coherente y progresiva.
+Cada sermón debe ser predicable, pastoral, bíblico y práctico.
+`;
+    }
+
+    if (tipoFinal === "devocional") {
+      return `
+Actúa como un pastor que escribe devocionales bíblicos, cálidos, cristocéntricos y edificantes.
+
+Debes crear una SERIE DEVOCIONAL de ${cantidadFinal} días para el contexto "${contextoFinal}".
+
+Tema general de la serie:
+${temaFinal}
+
+Tono de la serie:
+${tonoFinal}
+
+Texto bíblico base:
+${textoBaseFinal}
+
+INSTRUCCIONES IMPORTANTES
+
+Escribe en TEXTO LIMPIO.
+No uses Markdown.
+No uses símbolos como ###, ##, **, *, ni ---.
+No escribas de forma académica.
+Escribe de manera cálida, espiritual, pastoral y clara.
+
+Primero incluye:
+
+TITULO GENERAL DE LA SERIE
+OBJETIVO GENERAL
+IDEA CENTRAL DE LA SERIE
+
+Luego desarrolla:
+DÍA 1
+DÍA 2
+DÍA 3
+hasta completar los ${cantidadFinal} días.
+
+Cada día debe incluir:
+
+TITULO
+TEXTO BÍBLICO CLAVE
+VERDAD CENTRAL
+REFLEXIÓN DEVOCIONAL
+APLICACIÓN PERSONAL
+ORACIÓN FINAL
+
+REGLAS IMPORTANTES
+
+Cada día debe tener continuidad con el anterior.
+La serie debe sentirse progresiva y espiritualmente conectada.
+Incluye exactamente 3 aplicaciones personales por día.
+`;
+    }
+
+    if (tipoFinal === "estudio") {
+      return `
+Actúa como un maestro bíblico con claridad doctrinal, enfoque pastoral y capacidad para enseñar de forma sencilla.
+
+Debes crear una SERIE de ${cantidadFinal} estudios bíblicos para el contexto "${contextoFinal}".
+
+Tema general de la serie:
+${temaFinal}
+
+Tono de la serie:
+${tonoFinal}
+
+Texto bíblico base:
+${textoBaseFinal}
+
+INSTRUCCIONES IMPORTANTES
+
+Escribe en TEXTO LIMPIO.
+No uses Markdown.
+No uses símbolos como ###, ##, **, *, ni ---.
+No escribas como comentario académico demasiado técnico.
+Escribe como un estudio bíblico claro, pastoral y formativo.
+
+Primero incluye:
+
+TITULO GENERAL DE LA SERIE
+OBJETIVO GENERAL DE LA SERIE
+IDEA CENTRAL DE LA SERIE
+
+Luego desarrolla ${cantidadFinal} estudios bíblicos.
+
+Cada estudio debe incluir:
+
+TITULO
+OBJETIVO DEL ESTUDIO
+PASAJE BASE
+CONTEXTO BÍBLICO
+EXPLICACIÓN DEL TEXTO EN 3 PUNTOS
+VERDADES PRINCIPALES
+APLICACIÓN PRÁCTICA
+PREGUNTAS PARA PROFUNDIZAR
+CIERRE
+
+REGLAS IMPORTANTES
+
+Cada estudio debe construir sobre el anterior.
+Incluye exactamente 3 verdades principales.
+Incluye exactamente 3 aplicaciones prácticas.
+Incluye exactamente 5 preguntas para profundizar.
+`;
+    }
+  }
 
   if (tipoFinal === "celula") {
     return `
@@ -367,6 +601,8 @@ export default async function handler(req, res) {
       contexto,
       tono,
       textoBase,
+      modoGeneracion,
+      cantidadSerie,
       prompt
     } = req.body || {};
 
@@ -378,13 +614,15 @@ export default async function handler(req, res) {
         tipoContenido,
         contexto,
         tono,
-        textoBase
+        textoBase,
+        modoGeneracion,
+        cantidadSerie
       });
     } else if (prompt) {
       promptFinal = prompt;
     } else {
       return res.status(400).json({
-        error: "Faltan datos. Envía tema, tipoContenido, tono y opcionalmente contexto y textoBase."
+        error: "Faltan datos. Envía tema, tipoContenido, tono y opcionalmente contexto, textoBase, modoGeneracion y cantidadSerie."
       });
     }
 
