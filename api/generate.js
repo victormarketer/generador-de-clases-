@@ -35,7 +35,6 @@ export default async function handler(req, res) {
       return res.status(405).json({ error: "Método no permitido" });
     }
 
-    // ✅ PROTECCIÓN
     const APP_SECRET = process.env.APP_SECRET;
     const cookies = parseCookies(req);
     const authed = verifyToken(cookies.auth_token, APP_SECRET);
@@ -54,8 +53,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Falta prompt en el body." });
     }
 
-    // Modelo que ya te funcionó (ajustalo si lo cambiaste)
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
     const response = await fetch(url, {
       method: "POST",
