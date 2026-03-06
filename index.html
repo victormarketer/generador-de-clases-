@@ -469,64 +469,73 @@ async function compartirClase() {
     }
 
     const prompt = `
-Actúa como un pastor y maestro bíblico con experiencia en discipulado y formación de líderes de células.
+Actúa como un pastor y maestro bíblico con amplia experiencia en discipulado, formación de líderes de células y enseñanza bíblica en la iglesia local.
 
-Debes crear una enseñanza para una ${tipo}, con tono ${tono}, que sea clara, bíblica, pastoral, cristocéntrica y práctica.
+Debes crear una clase clara, bíblica, pastoral y práctica para una ${tipo}.
 
 Tema de la clase:
 ${tema}
 
-INSTRUCCIONES IMPORTANTES:
-- Escribe en TEXTO LIMPIO.
-- NO uses Markdown.
-- NO uses símbolos como ###, ##, **, *, ni ---.
-- Usa lenguaje pastoral, claro y directo.
-- Evita respuestas superficiales, repetitivas o demasiado largas.
-- No escribas como artículo ni como sermón extenso.
-- Escribe como una clase lista para enseñar en una célula.
-- Mantén cada sección concreta, útil y fácil de explicar.
+Tono de la enseñanza:
+${tono}
 
-ENFOQUE:
-- La enseñanza debe ser bíblica, cristocéntrica y aplicable.
-- Debe mostrar qué enseña el texto sobre Dios, el evangelio y la vida cristiana.
-- Debe incluir aplicación a la vida personal, familiar y espiritual.
-- Debe ayudar al líder a enseñar con claridad, no solo a leer contenido largo.
+INSTRUCCIONES IMPORTANTES
 
-ANTES DE REDACTAR:
-Primero organiza internamente un bosquejo breve con los puntos principales.
-Luego desarrolla la clase con orden, claridad y sencillez.
+Escribe en TEXTO LIMPIO.
+No uses Markdown.
+No uses símbolos como ###, ##, **, *, ni ---.
+No escribas como un artículo académico ni como un sermón demasiado largo.
+Escribe como una enseñanza clara y sencilla que un líder pueda usar fácilmente en una reunión de célula.
 
-ESTRUCTURA OBLIGATORIA:
+La enseñanza debe ser:
+bíblica
+cristocéntrica
+pastoral
+clara
+práctica para la vida cristiana.
+
+Evita respuestas superficiales o repetitivas.
+Mantén las secciones breves, claras y fáciles de explicar.
+
+Antes de escribir la enseñanza, organiza internamente un bosquejo breve y luego desarrolla cada sección con claridad.
+
+ESTRUCTURA OBLIGATORIA
 
 TITULO
 Máximo 12 palabras.
 
 OBJETIVO DE LA CLASE
-Solo 1 frase clara.
+Explica en una sola frase qué transformación espiritual busca esta enseñanza.
 
 TEXTO BIBLICO BASE
-Incluye el pasaje principal y una breve referencia al contexto.
+Incluye el pasaje principal y menciona brevemente el contexto bíblico.
 
 IDEA CENTRAL
-Resume en 1 frase la verdad principal de la clase.
+Resume en una sola frase la verdad principal de la enseñanza.
+
+DINÁMICA DE APERTURA
+Incluye una pregunta inicial o una pequeña dinámica para iniciar la conversación del grupo.
 
 INTRODUCCIÓN
-Máximo 1 párrafo breve y directo.
+Un párrafo breve que conecte el tema con la vida diaria de los creyentes.
 
-DESARROLLO BIBLICO
-Desarrolla máximo 3 puntos principales.
-Cada punto debe ser breve, claro y fácil de enseñar.
+DESARROLLO BÍBLICO
+Explica el pasaje bíblico en máximo 3 puntos principales.
+Cada punto debe ser claro, pastoral y fácil de enseñar.
 
-APLICACIÓN PRACTICA
-Incluye 3 aplicaciones concretas y accionables.
+APLICACIÓN PRÁCTICA
+Incluye 3 aplicaciones concretas para vivir esta verdad durante la semana.
+
+DESAFÍO DE LA SEMANA
+Propón un paso práctico que cada persona pueda aplicar durante los próximos días.
 
 PREGUNTAS PARA EL GRUPO
-Incluye exactamente 4 preguntas claras y conversacionales.
+Incluye exactamente 4 preguntas que ayuden a reflexionar y conversar.
 
 ORACIÓN FINAL
-Escribe una oración pastoral breve, cálida y alineada al tema.
+Escribe una oración pastoral breve basada en el tema de la enseñanza.
 
-La clase debe sentirse pastoral, sólida, ordenada y lista para usar en una célula.
+La clase debe sentirse pastoral, bíblica, clara y lista para ser enseñada en una célula.
 `;
     resultado.value = "Generando...";
     vista.innerHTML = "<p><strong>Generando...</strong></p>";
@@ -750,6 +759,7 @@ La clase debe sentirse pastoral, sólida, ordenada y lista para usar en una cél
 </script>
 </body>
 </html>
+
 
 
 
