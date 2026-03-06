@@ -450,37 +450,48 @@ if ("serviceWorker" in navigator) {
     }
 
     const prompt = `
-Genera una clase para una ${tipo} con un tono ${tono}.
+Actúa como un pastor con experiencia en discipulado y formación de líderes de células.
 
-Tema: ${tema}
+Debes generar una clase bíblica clara, pastoral, profunda y aplicable para una ${tipo}.
+
+Tema de la clase:
+${tema}
+
+Tono:
+${tono}
 
 IMPORTANTE:
-- Escribe en TEXTO LIMPIO.
-- NO uses Markdown.
-- NO uses símbolos como ###, ##, **, *, ni ---.
-- NO uses formato de blog.
-- Usa títulos simples como:
-  TITULO
-  OBJETIVO
-  TEXTO BASE
-  INTRODUCCIÓN
-  DESARROLLO BÍBLICO
-  APLICACIÓN PRÁCTICA
-  PREGUNTAS PARA EL GRUPO
-  TAREA PARA LA SEMANA
-  ORACIÓN FINAL
+- Escribe en TEXTO LIMPIO
+- NO uses símbolos Markdown como ### o **
+- Usa lenguaje claro y pastoral
+- Explica el texto bíblico correctamente
+- Incluye aplicación práctica para la vida cristiana
 
-Estructura:
+Estructura obligatoria:
+
 TITULO
-OBJETIVO
-TEXTO BASE
-INTRODUCCIÓN
-DESARROLLO BÍBLICO
-APLICACIÓN PRÁCTICA
-PREGUNTAS PARA EL GRUPO
-ORACIÓN FINAL
 
-Mantén el contenido bíblico, pastoral y práctico.
+OBJETIVO DE LA CLASE
+(Qué transformación se busca en el grupo)
+
+TEXTO BÍBLICO BASE
+
+INTRODUCCIÓN
+(Conecta el tema con la vida cotidiana)
+
+DESARROLLO BÍBLICO
+(Explica el pasaje bíblico de forma clara)
+
+APLICACIÓN PRÁCTICA
+(Cómo vivir esta verdad en la semana)
+
+PREGUNTAS PARA EL GRUPO
+(4 preguntas para conversación)
+
+ORACIÓN FINAL
+(Oración pastoral basada en el tema)
+
+La clase debe ser clara, bíblica, pastoral y útil para líderes de células.
 `;
 
     resultado.value = "Generando...";
@@ -705,6 +716,7 @@ Mantén el contenido bíblico, pastoral y práctico.
 </script>
 </body>
 </html>
+
 
 
 
