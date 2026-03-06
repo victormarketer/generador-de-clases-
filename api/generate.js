@@ -57,26 +57,30 @@ export default async function handler(req, res) {
 
     const response = await fetch(url, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify({
-  contents: [{
-    parts: [{
-      text: `
-Eres un teólogo pastoral especializado en discipulado y enseñanza bíblica en grupos pequeños.
+        contents: [
+          {
+            parts: [
+              {
+                text: prompt
+              }
+            ]
+          }
+        ]
+      })
+    });
 
-Genera una clase que sea:
-- bíblicamente fiel
-- pastoral
-- clara
-- aplicable
+    const rawText = await response.text();
+    let data = {};
 
-${prompt}
-`
-    }]
-  }]
-})
-
-    const data = await response.json().catch(() => ({}));
+    try {
+      data = JSON.parse(rawText);
+    } catch (e) {
+      data = { raw: rawText };
+    }
 
     if (!response.ok) {
       return res.status(response.status).json({
@@ -90,9 +94,18 @@ ${prompt}
       data?.candidates?.[0]?.content?.parts?.[0]?.text ||
       "";
 
+    if (!text) {
+      return res.status(500).json({
+        error: "Gemini respondió, pero no devolvió texto.",
+        details: data
+      });
+    }
+
     return res.status(200).json({ text });
   } catch (e) {
-    return res.status(500).json({ error: "Error interno", details: String(e) });
+    return res.status(500).json({
+      error: "Error interno en /api/generate",
+      details: String(e)
+    });
   }
 }
-
