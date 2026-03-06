@@ -425,7 +425,28 @@
     await fetch("/api/logout", { method:"POST" }).catch(()=>{});
     showLogin();
   }
+async function compartirClase() {
+  const texto = document.getElementById("resultado").value || "";
+  const tema = document.getElementById("tema").value || "Clase para Célula";
 
+  if (!texto.trim()) {
+    alert("Primero genera una clase.");
+    return;
+  }
+
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: tema,
+        text: texto
+      });
+    } catch (e) {
+      console.log("Compartir cancelado o no disponible");
+    }
+  } else {
+    alert("Tu dispositivo no permite compartir desde aquí.");
+  }
+}
   async function generar() {
     const tema = document.getElementById("tema").value.trim();
     const tipo = document.getElementById("tipo").value;
@@ -695,6 +716,7 @@ Mantén el contenido bíblico, pastoral y práctico.
 </script>
 </body>
 </html>
+
 
 
 
