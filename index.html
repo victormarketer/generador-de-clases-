@@ -505,12 +505,31 @@ La clase debe ser clara, bíblica, pastoral y útil para líderes de células.
         body: JSON.stringify({ prompt })
       });
 
-      const data = await respuesta.json().catch(() => ({}));
+      const rawText = await respuesta.text();
+let data = {};
 
-      if (!respuesta.ok) {
-        const errorTexto =
-          "ERROR: " + (data.error || "No se pudo generar") + "\n\n" +
-          "DETALLES:\n" + JSON.stringify(data.details || data, null, 2);
+try {
+  data = JSON.parse(rawText);
+} catch (e) {
+  data = { raw: rawText };
+}
+
+if (!respuesta.ok) {
+  const errorTexto =
+    "ERROR HTTP: " + respuesta.status + "\n\n" +
+    "MENSAJE:\n" + (data.error || "No se pudo generar") + "\n\n" +
+    "DETALLES:\n" + JSON.stringify(data.details || data, null, 2);
+
+  resultado.value = errorTexto;
+  vista.innerHTML =
+    "<p><strong>No se pudo generar la clase.</strong></p><pre style='white-space:pre-wrap'>" +
+    escapeHtml(errorTexto) +
+    "</pre>";
+  estado.textContent = "Ocurrió un error.";
+  return;
+}
+
+const texto = limpiarMarkdown(data.text || "No llegó texto desde Gemini.");
 
         resultado.value = errorTexto;
         vista.innerHTML = "<p><strong>No se pudo generar la clase.</strong></p><pre style='white-space:pre-wrap'>" + escapeHtml(errorTexto) + "</pre>";
@@ -716,6 +735,7 @@ La clase debe ser clara, bíblica, pastoral y útil para líderes de células.
 </script>
 </body>
 </html>
+
 
 
 
