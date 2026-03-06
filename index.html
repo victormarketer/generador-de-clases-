@@ -261,22 +261,22 @@
   }
 
   .card h2{
-    margin: 16px 0 10px;
-    font-size: 20px;
+    margin: 18px 0 10px;
+    font-size: 22px;
     border-left: 4px solid rgba(34,197,94,.75);
     padding-left: 10px;
   }
 
   .card h3{
-    margin: 14px 0 8px;
-    font-size: 16px;
-    color: rgba(255,255,255,.95);
+    margin: 16px 0 8px;
+    font-size: 17px;
+    color: rgba(255,255,255,.97);
   }
 
   .card p{
     margin: 8px 0;
     color: rgba(255,255,255,.88);
-    line-height: 1.6;
+    line-height: 1.7;
     font-size: 14px;
   }
 
@@ -290,12 +290,12 @@
     margin: 8px 0 12px 22px;
     padding:0;
     color: rgba(255,255,255,.88);
-    line-height:1.6;
+    line-height:1.7;
     font-size:14px;
   }
 
   .card li{
-    margin:4px 0;
+    margin:6px 0;
     font-size:14px;
   }
 
@@ -720,36 +720,74 @@
 
   function plainTextToHtml(raw){
     const text = escapeHtml(raw || "");
-
-    const blocks = text
-      .split(/\n\s*\n/)
-      .map(b => b.trim())
-      .filter(Boolean);
+    const lines = text.split("\n");
 
     let html = "";
+    let inList = false;
 
-    blocks.forEach(block => {
-      const lines = block.split("\n").map(l => l.trim()).filter(Boolean);
-
-      if(lines.length === 0) return;
-
-      const first = lines[0];
-      const rest = lines.slice(1);
-
-      if(
-        first === first.toUpperCase() &&
-        first.length <= 80 &&
-        !/[.:!?]$/.test(first)
-      ){
-        html += `<h2>${inlineFormat(first)}</h2>`;
-        if(rest.length){
-          html += `<p>${inlineFormat(rest.join(" "))}</p>`;
-        }
-      } else {
-        html += `<p>${inlineFormat(lines.join(" "))}</p>`;
+    function closeList() {
+      if (inList) {
+        html += "</ol>";
+        inList = false;
       }
-    });
+    }
 
+    for (let i = 0; i < lines.length; i++) {
+      let line = lines[i].trim();
+
+      if (!line) {
+        closeList();
+        continue;
+      }
+
+      if (/^(D[IÍ]A\s+\d+|SEMANA\s+\d+)$/i.test(line)) {
+        closeList();
+        html += `<h2>${inlineFormat(line)}</h2>`;
+        continue;
+      }
+
+      if (/^(OBJETIVO GENERAL|IDEA CENTRAL DE LA SERIE|T[IÍ]TULO GENERAL DE LA SERIE)$/i.test(line)) {
+        closeList();
+        html += `<h2>${inlineFormat(line)}</h2>`;
+        continue;
+      }
+
+      if (/^T[IÍ]TULO:\s*/i.test(line)) {
+        closeList();
+        const contenido = line.replace(/^T[IÍ]TULO:\s*/i, "");
+        html += `<h3>${inlineFormat(contenido)}</h3>`;
+        continue;
+      }
+
+      if (/^(TEXTO B[IÍ]BLICO CLAVE|TEXTO B[IÍ]BLICO BASE|VERDAD CENTRAL|IDEA CENTRAL|OBJETIVO DEL ESTUDIO|OBJETIVO DEL SERM[ÓO]N|OBJETIVO DE LA CLASE|PASAJE BASE):\s*/i.test(line)) {
+        closeList();
+        const match = line.match(/^([^:]+):\s*(.*)$/);
+        const etiqueta = match ? match[1] : "";
+        const contenido = match ? match[2] : "";
+        html += `<p><strong>${inlineFormat(etiqueta)}:</strong> ${inlineFormat(contenido)}</p>`;
+        continue;
+      }
+
+      if (/^(REFLEXI[ÓO]N DEVOCIONAL|APLICACI[ÓO]N PERSONAL|APLICACI[ÓO]N PR[ÁA]CTICA|ORACI[ÓO]N FINAL|INTRODUCCI[ÓO]N|CONTEXTO B[IÍ]BLICO|DESARROLLO|DESARROLLO B[IÍ]BLICO|VERDADES PRINCIPALES|PREGUNTAS PARA PROFUNDIZAR|PREGUNTAS PARA EL GRUPO|CIERRE|DESAF[IÍ]O DE LA SEMANA|DIN[ÁA]MICA DE APERTURA)$/i.test(line)) {
+        closeList();
+        html += `<h3>${inlineFormat(line)}</h3>`;
+        continue;
+      }
+
+      if (/^\d+\.\s+/.test(line)) {
+        if (!inList) {
+          html += "<ol>";
+          inList = true;
+        }
+        html += `<li>${inlineFormat(line.replace(/^\d+\.\s+/, ""))}</li>`;
+        continue;
+      }
+
+      closeList();
+      html += `<p>${inlineFormat(line)}</p>`;
+    }
+
+    closeList();
     return html;
   }
 
