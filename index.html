@@ -1,361 +1,684 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Generador de Clases para Células</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Generador de Clases para Células</title>
 
-<style>
-  :root{
-    --bg:#0f172a;
-    --card: rgba(255,255,255,.06);
-    --border: rgba(255,255,255,.12);
-    --text: rgba(255,255,255,.92);
-    --muted: rgba(255,255,255,.72);
-    --green:#22c55e;
-    --green2:#16a34a;
-  }
+  <style>
+    :root{
+      --bg:#0b1220;
+      --bg2:#0f172a;
+      --card:rgba(255,255,255,.06);
+      --border:rgba(255,255,255,.12);
+      --text:#ffffff;
+      --muted:rgba(255,255,255,.75);
+      --accent:#22c55e;
+      --accent2:#16a34a;
+      --danger:#ef4444;
+    }
 
-  body{
-    margin:0;
-    font-family:Arial, sans-serif;
-    background: radial-gradient(1200px 600px at 50% -150px, rgba(34,197,94,.25), transparent 60%),
-                linear-gradient(180deg, #0b1224, var(--bg));
-    color:var(--text);
-    padding:24px 14px;
-    text-align:center;
-  }
+    *{ box-sizing:border-box; }
 
-  .wrap{
-    max-width: 980px;
-    margin: 0 auto;
-  }
+    body{
+      margin:0;
+      font-family: Arial, sans-serif;
+      background:
+        radial-gradient(1200px 600px at 50% -150px, rgba(34,197,94,.20), transparent 60%),
+        radial-gradient(900px 400px at 20% 0%, rgba(59,130,246,.12), transparent 50%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      color: var(--text);
+      padding: 24px 14px;
+      text-align:center;
+    }
 
-  h1{
-    margin: 18px 0 10px;
-    font-size: clamp(24px, 3.6vw, 40px);
-    letter-spacing:.2px;
-  }
+    .wrap{
+      width:min(1100px, 100%);
+      margin:0 auto;
+    }
 
-  p.lead{
-    margin: 0 0 18px;
-    color: var(--muted);
-    font-size: clamp(14px, 2.1vw, 16px);
-  }
+    h1{
+      margin:12px 0 8px;
+      font-size: clamp(24px, 5vw, 42px);
+      letter-spacing:.2px;
+    }
 
-  .panel{
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 18px;
-    box-shadow: 0 20px 60px rgba(0,0,0,.35);
-  }
+    .lead{
+      margin:0 0 18px;
+      color:var(--muted);
+      font-size: clamp(14px, 2.2vw, 17px);
+    }
 
-  /* Login box */
-  .loginBox{
-    max-width: 520px;
-    margin: 18px auto 0;
-  }
+    .panel{
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid var(--border);
+      border-radius:18px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.35);
+      padding:18px;
+      margin-top:16px;
+    }
 
-  .row{
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    align-items:center;
-    justify-content:center;
-    margin-top: 12px;
-  }
+    .loginBox{
+      max-width: 540px;
+      margin: 0 auto;
+    }
 
-  input{
-    width: min(520px, 100%);
-    padding: 14px 14px;
-    border-radius: 12px;
-    border: 1px solid rgba(255,255,255,.16);
-    background: rgba(0,0,0,.18);
-    color: var(--text);
-    outline:none;
-    font-size: 16px;
-  }
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      margin-bottom:12px;
+      flex-wrap:wrap;
+    }
 
-  input::placeholder{ color: rgba(255,255,255,.5); }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:7px 12px;
+      border-radius:999px;
+      background:rgba(34,197,94,.14);
+      border:1px solid rgba(34,197,94,.28);
+      font-size:12px;
+      font-weight:700;
+    }
 
-  button{
-    padding: 12px 18px;
-    background: var(--green);
-    border: none;
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 12px;
-    margin: 6px;
-    font-weight: 700;
-  }
-  button:hover{ background: var(--green2); }
-  button.secondary{
-    background: rgba(255,255,255,.10);
-    border: 1px solid rgba(255,255,255,.16);
-  }
-  button.secondary:hover{
-    background: rgba(255,255,255,.14);
-  }
+    .status{
+      color:var(--muted);
+      font-size:12px;
+    }
 
-  textarea{
-    width: 100%;
-    min-height: clamp(260px, 42vh, 620px);
-    margin-top: 14px;
-    padding: 14px;
-    border-radius: 14px;
-    border: 1px solid rgba(255,255,255,.14);
-    background: rgba(0,0,0,.18);
-    color: var(--text);
-    font-size: 14px;
-    line-height: 1.55;
-  }
+    .row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:center;
+    }
 
-  .actions{
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    justify-content:center;
-    margin-top: 10px;
-  }
+    .field{
+      width:100%;
+      text-align:left;
+    }
 
-  .topbar{
-    display:flex;
-    justify-content: space-between;
-    align-items:center;
-    gap:10px;
-    margin-bottom: 10px;
-    color: var(--muted);
-    font-size: 13px;
-  }
+    label{
+      display:block;
+      margin:0 0 6px;
+      color:var(--muted);
+      font-size:13px;
+    }
 
-  .badge{
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    padding: 6px 10px;
-    border-radius: 999px;
-    background: rgba(34,197,94,.12);
-    border: 1px solid rgba(34,197,94,.25);
-    color: rgba(255,255,255,.9);
-  }
+    input, select, textarea{
+      width:100%;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      color:var(--text);
+      outline:none;
+      font-size:16px;
+    }
 
-  .hidden{ display:none !important; }
-</style>
+    input, select{
+      padding:14px;
+    }
+
+    textarea{
+      padding:16px;
+      min-height: 320px;
+      line-height:1.55;
+      font-size:14px;
+      resize:vertical;
+    }
+
+    input::placeholder{ color:rgba(255,255,255,.5); }
+
+    .controls{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr .8fr;
+      gap:12px;
+      margin-bottom:12px;
+    }
+
+    @media (max-width: 860px){
+      .controls{
+        grid-template-columns: 1fr;
+      }
+    }
+
+    button{
+      padding:13px 18px;
+      border:none;
+      border-radius:12px;
+      font-size:15px;
+      font-weight:700;
+      cursor:pointer;
+      margin:6px;
+    }
+
+    .btn-primary{
+      background:var(--accent);
+      color:white;
+    }
+    .btn-primary:hover{ background:var(--accent2); }
+
+    .btn-secondary{
+      background: rgba(255,255,255,.08);
+      color:white;
+      border:1px solid rgba(255,255,255,.12);
+    }
+
+    .btn-danger{
+      background: rgba(239,68,68,.12);
+      color:#fecaca;
+      border:1px solid rgba(239,68,68,.3);
+    }
+
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      gap:8px;
+      margin-top:12px;
+    }
+
+    .tabs{
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    .tab{
+      padding:10px 14px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      color:white;
+      font-size:13px;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    .tab.active{
+      background:rgba(34,197,94,.16);
+      border-color:rgba(34,197,94,.35);
+    }
+
+    .hidden{ display:none !important; }
+
+    .card{
+      width:100%;
+      min-height: clamp(280px, 46vh, 700px);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 14px;
+      padding: 18px;
+      overflow: auto;
+      font-size: 14px;
+      text-align:left;
+    }
+
+    .card h2{
+      margin: 16px 0 10px;
+      font-size: 20px;
+      border-left: 4px solid rgba(34,197,94,.75);
+      padding-left: 10px;
+    }
+
+    .card h3{
+      margin: 14px 0 8px;
+      font-size: 16px;
+      color: rgba(255,255,255,.95);
+    }
+
+    .card p{
+      margin: 8px 0;
+      color: rgba(255,255,255,.88);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .card hr{
+      border:none;
+      border-top:1px solid rgba(255,255,255,.12);
+      margin:14px 0;
+    }
+
+    .card ul, .card ol{
+      margin: 8px 0 12px 22px;
+      padding:0;
+      color: rgba(255,255,255,.88);
+      line-height:1.6;
+      font-size:14px;
+    }
+
+    .card li{
+      margin:4px 0;
+      font-size:14px;
+    }
+
+    .small{
+      color:var(--muted);
+      font-size:12px;
+      margin-top:8px;
+    }
+  </style>
 </head>
 
 <body>
   <div class="wrap">
     <h1>Generador de Clases para Células</h1>
-    <p class="lead">Escribe el tema y la IA creará una clase completa</p>
+    <p class="lead">Genera clases bíblicas con una presentación más profesional y compártelas fácilmente.</p>
 
     <!-- LOGIN -->
     <div id="loginView" class="panel loginBox">
       <div class="topbar">
         <span class="badge">🔒 Acceso privado</span>
-        <span id="loginStatus"></span>
+        <span id="loginStatus" class="status"></span>
       </div>
 
-      <p style="margin:8px 0 12px; color: var(--muted);">
-        Ingresá la contraseña para acceder al generador.
-      </p>
-
-      <input id="password" type="password" placeholder="Contraseña de acceso" />
-      <div class="row">
-        <button onclick="login()">Ingresar</button>
+      <div class="field">
+        <label for="password">Contraseña</label>
+        <input id="password" type="password" placeholder="Contraseña de acceso">
       </div>
-      <p id="loginMsg" style="margin:10px 0 0; color: rgba(255,255,255,.75); font-size:13px;"></p>
+
+      <div class="actions">
+        <button class="btn-primary" onclick="login()">Ingresar</button>
+      </div>
+
+      <p id="loginMsg" class="small"></p>
     </div>
 
     <!-- APP -->
-    <div id="appView" class="panel hidden" style="margin-top:18px;">
+    <div id="appView" class="panel hidden">
       <div class="topbar">
         <span class="badge">✅ Acceso concedido</span>
-        <button class="secondary" onclick="logout()">Salir</button>
+        <button class="btn-secondary" onclick="logout()">Salir</button>
       </div>
 
-      <input id="tema" placeholder="Ej: Restauración familiar" />
+      <div class="controls">
+        <div class="field">
+          <label for="tema">Tema</label>
+          <input id="tema" placeholder="Ej: La gracia de Dios">
+        </div>
+
+        <div class="field">
+          <label for="tipo">Tipo de clase</label>
+          <select id="tipo">
+            <option value="célula general">Célula general</option>
+            <option value="célula de mujeres">Célula de mujeres</option>
+            <option value="célula de jóvenes">Célula de jóvenes</option>
+            <option value="discipulado">Discipulado</option>
+            <option value="liderazgo">Liderazgo</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="tono">Tono</label>
+          <select id="tono">
+            <option value="pastoral">Pastoral</option>
+            <option value="bíblico">Bíblico</option>
+            <option value="práctico">Práctico</option>
+          </select>
+        </div>
+      </div>
+
       <div class="actions">
-        <button onclick="generar()">Generar Clase</button>
-        <button class="secondary" onclick="descargarTXT()">Descargar TXT</button>
-        <button class="secondary" onclick="descargarPDF()">Descargar PDF</button>
+        <button class="btn-primary" onclick="generar()">Generar Clase</button>
       </div>
 
-      <textarea id="resultado" placeholder="Aquí aparecerá la clase..."></textarea>
+      <div class="tabs">
+        <button id="tabPremium" class="tab active" onclick="setTab('premium')">Vista premium</button>
+        <button id="tabTexto" class="tab" onclick="setTab('texto')">Texto</button>
+      </div>
+
+      <div id="vista" class="card"></div>
+      <textarea id="resultado" class="hidden"></textarea>
+
+      <div class="actions">
+        <button class="btn-secondary" onclick="copiar()">Copiar</button>
+        <button class="btn-secondary" onclick="enviarWhatsApp()">WhatsApp</button>
+        <button class="btn-secondary" onclick="descargarTXT()">Descargar TXT</button>
+        <button class="btn-secondary" onclick="descargarPDF()">Descargar PDF</button>
+        <button class="btn-danger" onclick="limpiar()">Limpiar</button>
+      </div>
+
+      <p id="estado" class="small"></p>
     </div>
   </div>
 
 <script>
-async function checkAuth() {
-  const loginStatus = document.getElementById("loginStatus");
-  loginStatus.textContent = "Verificando…";
+  function setTab(tab){
+    const vista = document.getElementById("vista");
+    const resultado = document.getElementById("resultado");
+    const tPremium = document.getElementById("tabPremium");
+    const tTexto = document.getElementById("tabTexto");
 
-  try {
-    const r = await fetch("/api/me", { method: "GET" });
-    if (r.ok) {
-      showApp();
-      return true;
+    if(tab === "premium"){
+      vista.classList.remove("hidden");
+      resultado.classList.add("hidden");
+      tPremium.classList.add("active");
+      tTexto.classList.remove("active");
+    } else {
+      vista.classList.add("hidden");
+      resultado.classList.remove("hidden");
+      tPremium.classList.remove("active");
+      tTexto.classList.add("active");
     }
-  } catch (e) {}
+  }
 
-  loginStatus.textContent = "";
-  showLogin();
-  return false;
-}
+  async function checkAuth() {
+    try {
+      const r = await fetch("/api/me");
+      if (r.ok) {
+        showApp();
+        return;
+      }
+    } catch (e) {}
+    showLogin();
+  }
 
-function showApp(){
-  document.getElementById("loginView").classList.add("hidden");
-  document.getElementById("appView").classList.remove("hidden");
-}
-function showLogin(){
-  document.getElementById("appView").classList.add("hidden");
-  document.getElementById("loginView").classList.remove("hidden");
-}
+  function showApp(){
+    document.getElementById("loginView").classList.add("hidden");
+    document.getElementById("appView").classList.remove("hidden");
+  }
 
-async function login(){
-  const pass = document.getElementById("password").value;
-  const msg = document.getElementById("loginMsg");
-  msg.textContent = "Ingresando…";
+  function showLogin(){
+    document.getElementById("appView").classList.add("hidden");
+    document.getElementById("loginView").classList.remove("hidden");
+  }
 
-  try {
-    const r = await fetch("/api/login", {
-      method: "POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({ password: pass })
-    });
+  async function login(){
+    const password = document.getElementById("password").value;
+    const msg = document.getElementById("loginMsg");
+    const status = document.getElementById("loginStatus");
+    msg.textContent = "Ingresando...";
+    status.textContent = "";
 
-    const data = await r.json().catch(() => ({}));
+    try {
+      const r = await fetch("/api/login", {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({ password })
+      });
 
-    if (!r.ok) {
-      msg.textContent = data.error || "No se pudo ingresar.";
+      const data = await r.json().catch(()=>({}));
+
+      if(!r.ok){
+        msg.textContent = data.error || "No se pudo ingresar.";
+        return;
+      }
+
+      msg.textContent = "";
+      status.textContent = "Acceso concedido";
+      showApp();
+      document.getElementById("password").value = "";
+    } catch (e){
+      msg.textContent = "Error de conexión: " + e.message;
+    }
+  }
+
+  async function logout(){
+    await fetch("/api/logout", { method:"POST" }).catch(()=>{});
+    showLogin();
+  }
+
+  async function generar() {
+    const tema = document.getElementById("tema").value.trim();
+    const tipo = document.getElementById("tipo").value;
+    const tono = document.getElementById("tono").value;
+    const resultado = document.getElementById("resultado");
+    const vista = document.getElementById("vista");
+    const estado = document.getElementById("estado");
+
+    if (!tema) {
+      resultado.value = "Escribe un tema primero.";
+      vista.innerHTML = "<p><strong>Escribe un tema primero.</strong></p>";
       return;
     }
 
-    msg.textContent = "Listo ✅";
-    showApp();
-    document.getElementById("password").value = "";
-  } catch (e) {
-    msg.textContent = "Error de conexión: " + e.message;
-  }
-}
-
-async function logout(){
-  await fetch("/api/logout", { method: "POST" }).catch(() => {});
-  showLogin();
-}
-
-async function generar() {
-  const tema = document.getElementById("tema").value.trim();
-  const resultado = document.getElementById("resultado");
-
-  if (!tema) {
-    resultado.value = "Escribe un tema primero.";
-    return;
-  }
-
-  const prompt = `
-Crea una clase para una célula cristiana.
+    const prompt = `
+Genera una clase para una ${tipo} con un tono ${tono}.
 
 Tema: ${tema}
 
-Estructura:
-1) Introducción
-2) Desarrollo bíblico
-3) Aplicación práctica
-4) Preguntas para el grupo
-5) Oración final
+Instrucciones:
+- Entrégala en un formato claro y bien organizado.
+- Usa títulos y subtítulos útiles.
+- Incluye:
+  1) Título
+  2) Objetivo
+  3) Texto base
+  4) Introducción
+  5) Desarrollo bíblico
+  6) Aplicación práctica
+  7) Preguntas para el grupo
+  8) Oración final
+- No expliques que eres una IA.
+- Mantén el contenido bíblico, pastoral y práctico.
 `;
 
-  resultado.value = "Generando...";
+    resultado.value = "Generando...";
+    vista.innerHTML = "<p><strong>Generando...</strong></p>";
+    estado.textContent = "Generando clase...";
 
-  try {
-    const respuesta = await fetch("/api/generate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ prompt })
-    });
+    try {
+      const respuesta = await fetch("/api/generate", {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({ prompt })
+      });
 
-    const data = await respuesta.json().catch(() => ({}));
+      const data = await respuesta.json().catch(() => ({}));
 
-    if (!respuesta.ok) {
-      resultado.value =
-        "ERROR: " + (data.error || "No se pudo generar") + "\n\n" +
-        "DETALLES:\n" + JSON.stringify(data.details || data, null, 2);
+      if (!respuesta.ok) {
+        const errorTexto =
+          "ERROR: " + (data.error || "No se pudo generar") + "\n\n" +
+          "DETALLES:\n" + JSON.stringify(data.details || data, null, 2);
+
+        resultado.value = errorTexto;
+        vista.innerHTML = "<p><strong>No se pudo generar la clase.</strong></p><pre style='white-space:pre-wrap'>" + escapeHtml(errorTexto) + "</pre>";
+        estado.textContent = "Ocurrió un error.";
+        return;
+      }
+
+      const texto = data.text || "No llegó texto desde Gemini.";
+      resultado.value = texto;
+      vista.innerHTML = renderPremium(texto);
+      estado.textContent = "Clase generada correctamente ✅";
+      setTab("premium");
+    } catch (e) {
+      resultado.value = "Error de conexión: " + e.message;
+      vista.innerHTML = "<p><strong>Error de conexión:</strong> " + escapeHtml(e.message) + "</p>";
+      estado.textContent = "Error de conexión.";
+    }
+  }
+
+  function renderPremium(raw){
+    const text = (raw || "").replace(/\r\n/g, "\n").trim();
+    return markdownLiteToHtml(text);
+  }
+
+  function markdownLiteToHtml(raw){
+    const lines = escapeHtml(raw).split("\n");
+    let html = "";
+    let inUL = false;
+    let inOL = false;
+
+    function closeLists(){
+      if(inUL){ html += "</ul>"; inUL = false; }
+      if(inOL){ html += "</ol>"; inOL = false; }
+    }
+
+    for(let i=0; i<lines.length; i++){
+      let line = lines[i].trim();
+
+      if(line === ""){
+        closeLists();
+        html += "<p></p>";
+        continue;
+      }
+
+      if(/^---+$/.test(line)){
+        closeLists();
+        html += "<hr>";
+        continue;
+      }
+
+      if(line.startsWith("## ")){
+        closeLists();
+        html += "<h2>" + inlineFormat(line.slice(3)) + "</h2>";
+        continue;
+      }
+
+      if(line.startsWith("### ")){
+        closeLists();
+        html += "<h3>" + inlineFormat(line.slice(4)) + "</h3>";
+        continue;
+      }
+
+      if(/^(\*|-)\s+/.test(line)){
+        if(inOL){ html += "</ol>"; inOL = false; }
+        if(!inUL){ html += "<ul>"; inUL = true; }
+        html += "<li>" + inlineFormat(line.replace(/^(\*|-)\s+/, "")) + "</li>";
+        continue;
+      }
+
+      if(/^\d+(\)|\.|-)\s+/.test(line)){
+        if(inUL){ html += "</ul>"; inUL = false; }
+        if(!inOL){ html += "<ol>"; inOL = true; }
+        html += "<li>" + inlineFormat(line.replace(/^\d+(\)|\.|-)\s+/, "")) + "</li>";
+        continue;
+      }
+
+      closeLists();
+      html += "<p>" + inlineFormat(line) + "</p>";
+    }
+
+    closeLists();
+    return html.replace(/<p><\/p>(\s*<p><\/p>)+/g, "<p></p>");
+  }
+
+  function inlineFormat(text){
+    return (text || "").replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+  }
+
+  function copiar(){
+    const texto = document.getElementById("resultado").value || "";
+    if(!texto.trim()){
+      alert("Primero genera una clase.");
+      return;
+    }
+    navigator.clipboard.writeText(texto)
+      .then(()=>alert("Copiado ✅"))
+      .catch(()=>alert("No se pudo copiar."));
+  }
+
+  function enviarWhatsApp(){
+    const texto = document.getElementById("resultado").value || "";
+    if(!texto.trim()){
+      alert("Primero genera una clase.");
       return;
     }
 
-    resultado.value = data.text || "No llegó texto desde Gemini.";
-  } catch (e) {
-    resultado.value = "Error de conexión: " + e.message;
-  }
-}
-
-function descargarTXT() {
-  const contenido = document.getElementById("resultado").value || "";
-  if (!contenido.trim()) {
-    alert("Primero genera una clase para poder descargarla.");
-    return;
+    const mensaje = "Clase para Célula:\n\n" + texto;
+    const url = "https://wa.me/?text=" + encodeURIComponent(mensaje);
+    window.open(url, "_blank");
   }
 
-  const blob = new Blob([contenido], { type: "text/plain;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
+  function descargarTXT() {
+    const contenido = document.getElementById("resultado").value || "";
+    if (!contenido.trim()) {
+      alert("Primero genera una clase para poder descargarla.");
+      return;
+    }
 
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "clase-celula.txt";
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
+    const tema = (document.getElementById("tema").value || "clase-celula").trim().replace(/[^\w\-]+/g, "_");
+    const blob = new Blob([contenido], { type:"text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
 
-  URL.revokeObjectURL(url);
-}
-
-function descargarPDF() {
-  const contenido = document.getElementById("resultado").value || "";
-  if (!contenido.trim()) {
-    alert("Primero genera una clase para poder descargarla.");
-    return;
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${tema}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
   }
 
-  const win = window.open("", "_blank");
-  const safe = escapeHtml(contenido).replace(/\n/g, "<br>");
+  function descargarPDF() {
+    const raw = document.getElementById("resultado").value || "";
+    if (!raw.trim()) {
+      alert("Primero genera una clase para poder descargarla.");
+      return;
+    }
 
-  win.document.open();
-  win.document.write(`
-    <!DOCTYPE html>
-    <html lang="es">
-    <head>
-      <meta charset="UTF-8">
-      <title>Clase para Célula</title>
-      <style>
-        body{ font-family: Arial, sans-serif; padding: 24px; line-height: 1.55; font-size: 14px; }
-        h1{ margin-top: 0; }
-      </style>
-    </head>
-    <body>
-      <h1>Clase para Célula</h1>
-      <div>${safe}</div>
-      <script>
-        window.onload = () => window.print();
-      <\/script>
-    </body>
-    </html>
-  `);
-  win.document.close();
-}
+    const htmlContent = renderPremium(raw);
+    const tema = escapeHtml(document.getElementById("tema").value || "Clase para Célula");
 
-function escapeHtml(str) {
-  return str
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
+    const win = window.open("", "_blank");
+    win.document.open();
+    win.document.write(`
+      <!DOCTYPE html>
+      <html lang="es">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>${tema}</title>
+        <style>
+          body{
+            font-family: Arial, sans-serif;
+            padding: 26px;
+            line-height: 1.6;
+            color:#111827;
+            font-size:14px;
+          }
+          h2{
+            margin: 16px 0 10px;
+            font-size: 20px;
+            border-left: 4px solid #16a34a;
+            padding-left: 10px;
+          }
+          h3{
+            margin: 14px 0 8px;
+            font-size: 16px;
+          }
+          p{ margin: 8px 0; font-size:14px; }
+          ul,ol{ margin: 8px 0 12px 22px; }
+          li{ margin:4px 0; font-size:14px; }
+          hr{ border:none; border-top:1px solid #ddd; margin:14px 0; }
+        </style>
+      </head>
+      <body>
+        ${htmlContent}
+        <script>
+          window.onload = () => { window.print(); };
+        <\/script>
+      </body>
+      </html>
+    `);
+    win.document.close();
+  }
 
-checkAuth();
+  function limpiar(){
+    document.getElementById("tema").value = "";
+    document.getElementById("resultado").value = "";
+    document.getElementById("vista").innerHTML = "";
+    document.getElementById("estado").textContent = "";
+  }
+
+  function escapeHtml(str){
+    return (str || "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  checkAuth();
 </script>
-
 </body>
 </html>
