@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Generador de Clases para Células</title>
+<title>Generador de Recursos Bíblicos</title>
 
 <style>
   :root{
@@ -20,257 +20,297 @@
 
   *{ box-sizing:border-box; }
 
-    body{
-      margin:0;
-      font-family: Arial, sans-serif;
-      background:
-        radial-gradient(1200px 600px at 50% -150px, rgba(34,197,94,.20), transparent 60%),
-        radial-gradient(900px 400px at 20% 0%, rgba(59,130,246,.12), transparent 50%),
-        linear-gradient(180deg, var(--bg), var(--bg2));
-      color: var(--text);
-      padding: 24px 14px;
-      text-align:center;
+  body{
+    margin:0;
+    font-family: Arial, sans-serif;
+    background:
+      radial-gradient(1200px 600px at 50% -150px, rgba(34,197,94,.20), transparent 60%),
+      radial-gradient(900px 400px at 20% 0%, rgba(59,130,246,.12), transparent 50%),
+      linear-gradient(180deg, var(--bg), var(--bg2));
+    color: var(--text);
+    padding: 24px 14px;
+    text-align:center;
+  }
+
+  .wrap{
+    width:min(1100px, 100%);
+    margin:0 auto;
+  }
+
+  h1{
+    margin:12px 0 8px;
+    font-size: clamp(24px, 5vw, 42px);
+    letter-spacing:.2px;
+  }
+
+  .lead{
+    margin:0 0 18px;
+    color:var(--muted);
+    font-size: clamp(14px, 2.2vw, 17px);
+  }
+
+  .panel{
+    background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+    border:1px solid var(--border);
+    border-radius:18px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.35);
+    padding:18px;
+    margin-top:16px;
+  }
+
+  .loginBox{
+    max-width: 540px;
+    margin: 0 auto;
+  }
+
+  .topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    margin-bottom:12px;
+    flex-wrap:wrap;
+  }
+
+  .badge{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:7px 12px;
+    border-radius:999px;
+    background:rgba(34,197,94,.14);
+    border:1px solid rgba(34,197,94,.28);
+    font-size:12px;
+    font-weight:700;
+  }
+
+  .status{
+    color:var(--muted);
+    font-size:12px;
+  }
+
+  .row{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    align-items:center;
+    justify-content:center;
+  }
+
+  .field{
+    width:100%;
+    text-align:left;
+  }
+
+  label{
+    display:block;
+    margin:0 0 6px;
+    color:var(--muted);
+    font-size:13px;
+  }
+
+  input, select, textarea{
+    width:100%;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,.14);
+    background: rgba(0,0,0,.18);
+    color:var(--text);
+    outline:none;
+    font-size:16px;
+  }
+
+  input, select{
+    padding:14px;
+  }
+
+  textarea{
+    padding:16px;
+    min-height: 320px;
+    line-height:1.55;
+    font-size:14px;
+    resize:vertical;
+  }
+
+  input::placeholder,
+  textarea::placeholder{
+    color:rgba(255,255,255,.5);
+  }
+
+  .controls{
+    display:grid;
+    grid-template-columns: 1.2fr .8fr .8fr;
+    gap:12px;
+    margin-bottom:12px;
+  }
+
+  .controls-2{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:12px;
+    margin-bottom:12px;
+  }
+
+  @media (max-width: 860px){
+    .controls,
+    .controls-2{
+      grid-template-columns: 1fr;
     }
+  }
 
-    .wrap{
-      width:min(1100px, 100%);
-      margin:0 auto;
-    }
+  button{
+    padding:13px 18px;
+    border:none;
+    border-radius:12px;
+    font-size:15px;
+    font-weight:700;
+    cursor:pointer;
+    margin:6px;
+  }
 
-    h1{
-      margin:12px 0 8px;
-      font-size: clamp(24px, 5vw, 42px);
-      letter-spacing:.2px;
-    }
+  .btn-primary{
+    background:var(--accent);
+    color:white;
+  }
 
-    .lead{
-      margin:0 0 18px;
-      color:var(--muted);
-      font-size: clamp(14px, 2.2vw, 17px);
-    }
+  .btn-primary:hover{
+    background:var(--accent2);
+  }
 
-    .panel{
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      border:1px solid var(--border);
-      border-radius:18px;
-      box-shadow: 0 20px 60px rgba(0,0,0,.35);
-      padding:18px;
-      margin-top:16px;
-    }
+  .btn-secondary{
+    background: rgba(255,255,255,.08);
+    color:white;
+    border:1px solid rgba(255,255,255,.12);
+  }
 
-    .loginBox{
-      max-width: 540px;
-      margin: 0 auto;
-    }
+  .btn-danger{
+    background: rgba(239,68,68,.12);
+    color:#fecaca;
+    border:1px solid rgba(239,68,68,.3);
+  }
 
-    .topbar{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-      margin-bottom:12px;
-      flex-wrap:wrap;
-    }
+  .actions{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:8px;
+    margin-top:12px;
+  }
 
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:7px 12px;
-      border-radius:999px;
-      background:rgba(34,197,94,.14);
-      border:1px solid rgba(34,197,94,.28);
-      font-size:12px;
-      font-weight:700;
-    }
+  .quick-types{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:10px;
+    margin-bottom:16px;
+  }
 
-    .status{
-      color:var(--muted);
-      font-size:12px;
-    }
+  .quick-type{
+    padding:10px 14px;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,.12);
+    background:rgba(255,255,255,.06);
+    color:white;
+    font-size:13px;
+    font-weight:700;
+    cursor:pointer;
+  }
 
-    .row{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:center;
-    }
+  .quick-type.active{
+    background:rgba(34,197,94,.16);
+    border-color:rgba(34,197,94,.35);
+  }
 
-    .field{
-      width:100%;
-      text-align:left;
-    }
+  .tabs{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:14px;
+  }
 
-    label{
-      display:block;
-      margin:0 0 6px;
-      color:var(--muted);
-      font-size:13px;
-    }
+  .tab{
+    padding:10px 14px;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,.12);
+    background:rgba(255,255,255,.06);
+    color:white;
+    font-size:13px;
+    font-weight:700;
+    cursor:pointer;
+  }
 
-    input, select, textarea{
-      width:100%;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.18);
-      color:var(--text);
-      outline:none;
-      font-size:16px;
-    }
+  .tab.active{
+    background:rgba(34,197,94,.16);
+    border-color:rgba(34,197,94,.35);
+  }
 
-    input, select{
-      padding:14px;
-    }
+  .hidden{
+    display:none !important;
+  }
 
-    textarea{
-      padding:16px;
-      min-height: 320px;
-      line-height:1.55;
-      font-size:14px;
-      resize:vertical;
-    }
+  .card{
+    width:100%;
+    min-height: clamp(280px, 46vh, 700px);
+    background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 14px;
+    padding: 18px;
+    overflow: auto;
+    font-size: 14px;
+    text-align:left;
+  }
 
-    input::placeholder{ color:rgba(255,255,255,.5); }
+  .card h2{
+    margin: 16px 0 10px;
+    font-size: 20px;
+    border-left: 4px solid rgba(34,197,94,.75);
+    padding-left: 10px;
+  }
 
-    .controls{
-      display:grid;
-      grid-template-columns: 1.2fr .8fr .8fr;
-      gap:12px;
-      margin-bottom:12px;
-    }
+  .card h3{
+    margin: 14px 0 8px;
+    font-size: 16px;
+    color: rgba(255,255,255,.95);
+  }
 
-    @media (max-width: 860px){
-      .controls{
-        grid-template-columns: 1fr;
-      }
-    }
+  .card p{
+    margin: 8px 0;
+    color: rgba(255,255,255,.88);
+    line-height: 1.6;
+    font-size: 14px;
+  }
 
-    button{
-      padding:13px 18px;
-      border:none;
-      border-radius:12px;
-      font-size:15px;
-      font-weight:700;
-      cursor:pointer;
-      margin:6px;
-    }
+  .card hr{
+    border:none;
+    border-top:1px solid rgba(255,255,255,.12);
+    margin:14px 0;
+  }
 
-    .btn-primary{
-      background:var(--accent);
-      color:white;
-    }
-    .btn-primary:hover{ background:var(--accent2); }
+  .card ul, .card ol{
+    margin: 8px 0 12px 22px;
+    padding:0;
+    color: rgba(255,255,255,.88);
+    line-height:1.6;
+    font-size:14px;
+  }
 
-    .btn-secondary{
-      background: rgba(255,255,255,.08);
-      color:white;
-      border:1px solid rgba(255,255,255,.12);
-    }
+  .card li{
+    margin:4px 0;
+    font-size:14px;
+  }
 
-    .btn-danger{
-      background: rgba(239,68,68,.12);
-      color:#fecaca;
-      border:1px solid rgba(239,68,68,.3);
-    }
-
-    .actions{
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:center;
-      gap:8px;
-      margin-top:12px;
-    }
-
-    .tabs{
-      display:flex;
-      justify-content:center;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-bottom:14px;
-    }
-
-    .tab{
-      padding:10px 14px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.06);
-      color:white;
-      font-size:13px;
-      font-weight:700;
-      cursor:pointer;
-    }
-
-    .tab.active{
-      background:rgba(34,197,94,.16);
-      border-color:rgba(34,197,94,.35);
-    }
-
-    .hidden{ display:none !important; }
-
-    .card{
-      width:100%;
-      min-height: clamp(280px, 46vh, 700px);
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 14px;
-      padding: 18px;
-      overflow: auto;
-      font-size: 14px;
-      text-align:left;
-    }
-
-    .card h2{
-      margin: 16px 0 10px;
-      font-size: 20px;
-      border-left: 4px solid rgba(34,197,94,.75);
-      padding-left: 10px;
-    }
-
-    .card h3{
-      margin: 14px 0 8px;
-      font-size: 16px;
-      color: rgba(255,255,255,.95);
-    }
-
-    .card p{
-      margin: 8px 0;
-      color: rgba(255,255,255,.88);
-      line-height: 1.6;
-      font-size: 14px;
-    }
-
-    .card hr{
-      border:none;
-      border-top:1px solid rgba(255,255,255,.12);
-      margin:14px 0;
-    }
-
-    .card ul, .card ol{
-      margin: 8px 0 12px 22px;
-      padding:0;
-      color: rgba(255,255,255,.88);
-      line-height:1.6;
-      font-size:14px;
-    }
-
-    .card li{
-      margin:4px 0;
-      font-size:14px;
-    }
-
-    .small{
-      color:var(--muted);
-      font-size:12px;
-      margin-top:8px;
-    }
-  </style>
+  .small{
+    color:var(--muted);
+    font-size:12px;
+    margin-top:8px;
+  }
+</style>
 </head>
 
 <body>
   <div class="wrap">
-    <h1>Generador de Clases para Células</h1>
-    <p class="lead">Genera clases bíblicas con una presentación más profesional y compártelas fácilmente.</p>
+    <h1>Generador de Recursos Bíblicos</h1>
+    <p class="lead">Prepara clases, sermones, devocionales y estudios bíblicos con una presentación más profesional y compártelos fácilmente.</p>
 
     <!-- LOGIN -->
     <div id="loginView" class="panel loginBox">
@@ -298,6 +338,13 @@
         <button class="btn-secondary" onclick="logout()">Salir</button>
       </div>
 
+      <div class="quick-types">
+        <button id="quick-celula" class="quick-type active" type="button" onclick="seleccionarTipoContenido('celula')">📖 Clase para célula</button>
+        <button id="quick-sermon" class="quick-type" type="button" onclick="seleccionarTipoContenido('sermon')">🎤 Sermón</button>
+        <button id="quick-devocional" class="quick-type" type="button" onclick="seleccionarTipoContenido('devocional')">🙏 Devocional</button>
+        <button id="quick-estudio" class="quick-type" type="button" onclick="seleccionarTipoContenido('estudio')">📚 Estudio bíblico</button>
+      </div>
+
       <div class="controls">
         <div class="field">
           <label for="tema">Tema</label>
@@ -305,13 +352,12 @@
         </div>
 
         <div class="field">
-          <label for="tipo">Tipo de clase</label>
-          <select id="tipo">
-            <option value="célula general">Célula general</option>
-            <option value="célula de mujeres">Célula de mujeres</option>
-            <option value="célula de jóvenes">Célula de jóvenes</option>
-            <option value="discipulado">Discipulado</option>
-            <option value="liderazgo">Liderazgo</option>
+          <label for="tipoContenido">Tipo de contenido</label>
+          <select id="tipoContenido" onchange="actualizarQuickButtons(); actualizarContextoLabel();">
+            <option value="celula">Clase para célula</option>
+            <option value="sermon">Sermón</option>
+            <option value="devocional">Devocional</option>
+            <option value="estudio">Estudio bíblico</option>
           </select>
         </div>
 
@@ -321,12 +367,35 @@
             <option value="pastoral">Pastoral</option>
             <option value="bíblico">Bíblico</option>
             <option value="práctico">Práctico</option>
+            <option value="profundo">Profundo</option>
+            <option value="evangelístico">Evangelístico</option>
           </select>
         </div>
       </div>
 
+      <div class="controls-2">
+        <div class="field">
+          <label id="labelContexto" for="contexto">Tipo o público</label>
+          <select id="contexto">
+            <option value="general">General</option>
+            <option value="mujeres">Mujeres</option>
+            <option value="hombres">Hombres</option>
+            <option value="jóvenes">Jóvenes</option>
+            <option value="matrimonios">Matrimonios</option>
+            <option value="liderazgo">Liderazgo</option>
+            <option value="discipulado">Discipulado</option>
+            <option value="evangelístico">Evangelístico</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="textoBase">Texto bíblico base</label>
+          <input id="textoBase" placeholder="Ej: Efesios 2:8-10">
+        </div>
+      </div>
+
       <div class="actions">
-        <button class="btn-primary" onclick="generar()">Generar Clase</button>
+        <button class="btn-primary" onclick="generar()">Generar contenido</button>
       </div>
 
       <div class="tabs">
@@ -338,12 +407,13 @@
       <textarea id="resultado" class="hidden"></textarea>
 
       <div class="actions">
-  <button class="btn-secondary" onclick="copiar()">Copiar</button>
-  <button class="btn-secondary" onclick="descargarTXT()">Descargar TXT</button>
-  <button class="btn-secondary" onclick="compartirClase()">Compartir</button>
-  <button class="btn-secondary" onclick="nuevaClase()">Nueva clase</button>
-  <button class="btn-danger" onclick="limpiar()">Limpiar</button>
-</div>
+        <button class="btn-secondary" onclick="copiar()">Copiar</button>
+        <button class="btn-secondary" onclick="descargarTXT()">Descargar TXT</button>
+        <button class="btn-secondary" onclick="compartirContenido()">Compartir</button>
+        <button class="btn-secondary" onclick="enviarWhatsApp()">WhatsApp</button>
+        <button class="btn-secondary" onclick="nuevaClase()">Nuevo contenido</button>
+        <button class="btn-danger" onclick="limpiar()">Limpiar</button>
+      </div>
 
       <p id="estado" class="small"></p>
     </div>
@@ -424,60 +494,69 @@
     await fetch("/api/logout", { method:"POST" }).catch(()=>{});
     showLogin();
   }
-async function compartirClase() {
-  const texto = document.getElementById("resultado").value || "";
-  const tema = document.getElementById("tema").value || "Clase para Célula";
 
-  if (!texto.trim()) {
-    alert("Primero genera una clase.");
-    return;
+  function seleccionarTipoContenido(tipo){
+    document.getElementById("tipoContenido").value = tipo;
+    actualizarQuickButtons();
+    actualizarContextoLabel();
   }
 
-  if (navigator.share) {
-    try {
-      await navigator.share({
-        title: tema,
-        text: texto
-      });
-    } catch (e) {
-      console.log("Compartir cancelado o no disponible");
-    }
-  } else {
-    alert("Tu dispositivo no permite compartir desde aquí.");
+  function actualizarQuickButtons(){
+    const tipo = document.getElementById("tipoContenido").value;
+
+    const ids = ["celula", "sermon", "devocional", "estudio"];
+    ids.forEach(id => {
+      const btn = document.getElementById("quick-" + id);
+      if(btn){
+        btn.classList.toggle("active", id === tipo);
+      }
+    });
   }
-}
-  function nuevaClase() {
-  document.getElementById("tema").value = "";
-  document.getElementById("resultado").value = "";
-  document.getElementById("vista").innerHTML = "";
-  document.getElementById("estado").textContent = "";
-  setTab("premium");
-  window.scrollTo({ top: 0, behavior: "smooth" });
-}
-  async function generar() {
-    const tema = document.getElementById("tema").value.trim();
-    const tipo = document.getElementById("tipo").value;
-    const tono = document.getElementById("tono").value;
-    const resultado = document.getElementById("resultado");
-    const vista = document.getElementById("vista");
-    const estado = document.getElementById("estado");
 
-    if (!tema) {
-      resultado.value = "Escribe un tema primero.";
-      vista.innerHTML = "<p><strong>Escribe un tema primero.</strong></p>";
-      return;
+  function actualizarContextoLabel(){
+    const tipo = document.getElementById("tipoContenido").value;
+    const label = document.getElementById("labelContexto");
+
+    if(tipo === "celula"){
+      label.textContent = "Tipo o público de la célula";
+    } else if(tipo === "sermon"){
+      label.textContent = "Contexto o público del sermón";
+    } else if(tipo === "devocional"){
+      label.textContent = "Contexto o público del devocional";
+    } else if(tipo === "estudio"){
+      label.textContent = "Contexto o público del estudio";
+    } else {
+      label.textContent = "Tipo o público";
     }
+  }
 
-    const prompt = `
+  function getNombreContenido(tipo){
+    if(tipo === "celula") return "Clase para célula";
+    if(tipo === "sermon") return "Sermón";
+    if(tipo === "devocional") return "Devocional";
+    if(tipo === "estudio") return "Estudio bíblico";
+    return "Contenido bíblico";
+  }
+
+  function construirPrompt({ tema, tipoContenido, contexto, tono, textoBase }){
+    const textoBaseFinal = textoBase?.trim()
+      ? textoBase.trim()
+      : "elige un texto bíblico apropiado y fiel al tema";
+
+    if(tipoContenido === "celula"){
+      return `
 Actúa como un pastor y maestro bíblico con amplia experiencia en discipulado, formación de líderes de células y enseñanza bíblica en la iglesia local.
 
-Debes crear una clase clara, bíblica, pastoral y práctica para una ${tipo}.
+Debes crear una clase clara, bíblica, pastoral y práctica para una célula de contexto "${contexto}".
 
 Tema de la clase:
 ${tema}
 
 Tono de la enseñanza:
 ${tono}
+
+Texto bíblico base:
+${textoBaseFinal}
 
 INSTRUCCIONES IMPORTANTES
 
@@ -518,11 +597,7 @@ IDEA CENTRAL
 Resume en una sola frase la verdad principal de la enseñanza.
 
 DINÁMICA DE APERTURA
-
-Pregunta al grupo:
-¿Qué cualidades admiras en una mujer que realmente refleja a Cristo?
-
-Pide a las participantes mencionar una característica y escríbela en una lista.
+Propón una dinámica breve y participativa relacionada con el tema y adecuada al público indicado.
 
 INTRODUCCIÓN
 Un párrafo breve que conecte el tema con la vida diaria de los creyentes.
@@ -545,9 +620,275 @@ Escribe una oración pastoral breve basada en el tema de la enseñanza.
 
 La clase debe sentirse pastoral, bíblica, clara y lista para ser enseñada en una célula.
 `;
+    }
+
+    if(tipoContenido === "sermon"){
+      return `
+Actúa como un predicador y maestro bíblico experimentado, con enfoque cristocéntrico, pastoral y fiel al texto.
+
+Debes desarrollar un sermón claro, bíblico y listo para predicar.
+
+Tema del sermón:
+${tema}
+
+Contexto o público:
+${contexto}
+
+Tono:
+${tono}
+
+Texto bíblico base:
+${textoBaseFinal}
+
+INSTRUCCIONES IMPORTANTES
+
+Escribe en TEXTO LIMPIO.
+No uses Markdown.
+No uses símbolos como ###, ##, **, *, ni ---.
+No escribas como un artículo académico.
+Escribe como material real para predicar.
+
+Cada sección debe ser clara y útil.
+Evita párrafos demasiado largos.
+Haz que cada punto tenga sustancia y aplicación.
+
+El sermón debe ser:
+bíblico
+cristocéntrico
+pastoral
+claro
+práctico
+predicable
+
+ESTRUCTURA OBLIGATORIA
+
+TITULO
+Máximo 12 palabras.
+
+OBJETIVO DEL SERMÓN
+Explica en una sola frase qué debe producir este mensaje en los oyentes.
+
+TEXTO BÍBLICO BASE
+Incluye el pasaje principal y menciona brevemente el contexto.
+
+IDEA CENTRAL
+Resume en una frase la verdad principal del sermón.
+
+INTRODUCCIÓN
+Breve, clara y conectada con la vida real.
+
+CONTEXTO BÍBLICO
+Explica el contexto del pasaje de forma sencilla.
+
+DESARROLLO
+Desarrolla el sermón en 3 puntos principales.
+Cada punto debe tener explicación y aplicación pastoral.
+
+APLICACIÓN PRÁCTICA
+Incluye 3 aplicaciones concretas.
+
+CONCLUSIÓN
+Cierra con fuerza y claridad.
+
+LLAMADO FINAL
+Haz un llamado pastoral coherente con el tema.
+`;
+    }
+
+    if(tipoContenido === "devocional"){
+      return `
+Actúa como un pastor que escribe devocionales bíblicos, cálidos, cristocéntricos y edificantes.
+
+Debes escribir un devocional claro, profundo y práctico.
+
+Tema del devocional:
+${tema}
+
+Contexto o público:
+${contexto}
+
+Tono:
+${tono}
+
+Texto bíblico base:
+${textoBaseFinal}
+
+INSTRUCCIONES IMPORTANTES
+
+Escribe en TEXTO LIMPIO.
+No uses Markdown.
+No uses símbolos como ###, ##, **, *, ni ---.
+No escribas de forma académica.
+Escribe de manera cálida, clara y espiritual.
+
+El devocional debe ser:
+bíblico
+cristocéntrico
+pastoral
+edificante
+práctico
+
+ESTRUCTURA OBLIGATORIA
+
+TITULO
+Máximo 12 palabras.
+
+TEXTO BÍBLICO CLAVE
+Incluye el pasaje principal.
+
+VERDAD CENTRAL
+Resume en una frase la enseñanza principal.
+
+REFLEXIÓN DEVOCIONAL
+Desarrolla una reflexión clara y pastoral.
+
+APLICACIÓN PERSONAL
+Incluye 3 aplicaciones breves y concretas.
+
+ORACIÓN FINAL
+Escribe una oración sencilla y pastoral basada en el tema.
+`;
+    }
+
+    if(tipoContenido === "estudio"){
+      return `
+Actúa como un maestro bíblico con claridad doctrinal, enfoque pastoral y capacidad para enseñar de forma sencilla.
+
+Debes desarrollar un estudio bíblico claro, formativo y útil para enseñar.
+
+Tema del estudio:
+${tema}
+
+Contexto o público:
+${contexto}
+
+Tono:
+${tono}
+
+Texto bíblico base:
+${textoBaseFinal}
+
+INSTRUCCIONES IMPORTANTES
+
+Escribe en TEXTO LIMPIO.
+No uses Markdown.
+No uses símbolos como ###, ##, **, *, ni ---.
+No escribas como un comentario académico demasiado técnico.
+Escribe como un estudio bíblico claro y formativo.
+
+El estudio debe ser:
+bíblico
+cristocéntrico
+claro
+formativo
+pastoral
+práctico
+
+ESTRUCTURA OBLIGATORIA
+
+TITULO
+Máximo 12 palabras.
+
+OBJETIVO DEL ESTUDIO
+Explica en una sola frase qué busca enseñar este estudio.
+
+PASAJE BASE
+Incluye el texto principal.
+
+CONTEXTO BÍBLICO
+Explica el contexto de forma sencilla.
+
+EXPLICACIÓN DEL TEXTO
+Desarrolla el contenido en 3 puntos principales.
+
+VERDADES PRINCIPALES
+Resume 3 enseñanzas claves.
+
+APLICACIÓN PRÁCTICA
+Incluye 3 aplicaciones concretas.
+
+PREGUNTAS PARA PROFUNDIZAR
+Incluye exactamente 5 preguntas.
+
+CIERRE
+Escribe un cierre breve y claro.
+`;
+    }
+
+    return `
+Actúa como un maestro bíblico pastoral.
+Desarrolla un contenido sobre el tema "${tema}" con tono "${tono}" y tomando como base "${textoBaseFinal}".
+`;
+  }
+
+  async function compartirContenido() {
+    const texto = document.getElementById("resultado").value || "";
+    const tema = document.getElementById("tema").value || "Contenido bíblico";
+
+    if (!texto.trim()) {
+      alert("Primero genera un contenido.");
+      return;
+    }
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: tema,
+          text: texto
+        });
+      } catch (e) {
+        console.log("Compartir cancelado o no disponible");
+      }
+    } else {
+      alert("Tu dispositivo no permite compartir desde aquí.");
+    }
+  }
+
+  function nuevaClase() {
+    document.getElementById("tema").value = "";
+    document.getElementById("textoBase").value = "";
+    document.getElementById("resultado").value = "";
+    document.getElementById("vista").innerHTML = "";
+    document.getElementById("estado").textContent = "";
+    document.getElementById("tipoContenido").value = "celula";
+    document.getElementById("contexto").value = "general";
+    document.getElementById("tono").value = "pastoral";
+    actualizarQuickButtons();
+    actualizarContextoLabel();
+    setTab("premium");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  async function generar() {
+    const tema = document.getElementById("tema").value.trim();
+    const tipoContenido = document.getElementById("tipoContenido").value;
+    const contexto = document.getElementById("contexto").value;
+    const tono = document.getElementById("tono").value;
+    const textoBase = document.getElementById("textoBase").value.trim();
+
+    const resultado = document.getElementById("resultado");
+    const vista = document.getElementById("vista");
+    const estado = document.getElementById("estado");
+
+    if (!tema) {
+      resultado.value = "Escribe un tema primero.";
+      vista.innerHTML = "<p><strong>Escribe un tema primero.</strong></p>";
+      return;
+    }
+
+    const prompt = construirPrompt({
+      tema,
+      tipoContenido,
+      contexto,
+      tono,
+      textoBase
+    });
+
+    const nombreContenido = getNombreContenido(tipoContenido);
+
     resultado.value = "Generando...";
-    vista.innerHTML = "<p><strong>Generando...</strong></p>";
-    estado.textContent = "Generando clase...";
+    vista.innerHTML = `<p><strong>Generando ${escapeHtml(nombreContenido.toLowerCase())}...</strong></p>`;
+    estado.textContent = `Generando ${nombreContenido.toLowerCase()}...`;
 
     try {
       const respuesta = await fetch("/api/generate", {
@@ -564,7 +905,7 @@ La clase debe sentirse pastoral, bíblica, clara y lista para ser enseñada en u
           "DETALLES:\n" + JSON.stringify(data.details || data, null, 2);
 
         resultado.value = errorTexto;
-        vista.innerHTML = "<p><strong>No se pudo generar la clase.</strong></p><pre style='white-space:pre-wrap'>" + escapeHtml(errorTexto) + "</pre>";
+        vista.innerHTML = "<p><strong>No se pudo generar el contenido.</strong></p><pre style='white-space:pre-wrap'>" + escapeHtml(errorTexto) + "</pre>";
         estado.textContent = "Ocurrió un error.";
         return;
       }
@@ -572,7 +913,7 @@ La clase debe sentirse pastoral, bíblica, clara y lista para ser enseñada en u
       const texto = data.text || "No llegó texto desde Gemini.";
       resultado.value = texto;
       vista.innerHTML = renderPremium(texto);
-      estado.textContent = "Clase generada correctamente ✅";
+      estado.textContent = `${nombreContenido} generado correctamente ✅`;
       setTab("premium");
     } catch (e) {
       resultado.value = "Error de conexión: " + e.message;
@@ -583,67 +924,42 @@ La clase debe sentirse pastoral, bíblica, clara y lista para ser enseñada en u
 
   function renderPremium(raw){
     const text = (raw || "").replace(/\r\n/g, "\n").trim();
-    return markdownLiteToHtml(text);
+    return plainTextToHtml(text);
   }
 
-  function markdownLiteToHtml(raw){
-    const lines = escapeHtml(raw).split("\n");
+  function plainTextToHtml(raw){
+    const text = escapeHtml(raw || "");
+
+    const blocks = text
+      .split(/\n\s*\n/)
+      .map(b => b.trim())
+      .filter(Boolean);
+
     let html = "";
-    let inUL = false;
-    let inOL = false;
 
-    function closeLists(){
-      if(inUL){ html += "</ul>"; inUL = false; }
-      if(inOL){ html += "</ol>"; inOL = false; }
-    }
+    blocks.forEach(block => {
+      const lines = block.split("\n").map(l => l.trim()).filter(Boolean);
 
-    for(let i=0; i<lines.length; i++){
-      let line = lines[i].trim();
+      if(lines.length === 0) return;
 
-      if(line === ""){
-        closeLists();
-        html += "<p></p>";
-        continue;
+      const first = lines[0];
+      const rest = lines.slice(1);
+
+      if(
+        first === first.toUpperCase() &&
+        first.length <= 80 &&
+        !/[.:!?]$/.test(first)
+      ){
+        html += `<h2>${inlineFormat(first)}</h2>`;
+        if(rest.length){
+          html += `<p>${inlineFormat(rest.join(" "))}</p>`;
+        }
+      } else {
+        html += `<p>${inlineFormat(lines.join(" "))}</p>`;
       }
+    });
 
-      if(/^---+$/.test(line)){
-        closeLists();
-        html += "<hr>";
-        continue;
-      }
-
-      if(line.startsWith("## ")){
-        closeLists();
-        html += "<h2>" + inlineFormat(line.slice(3)) + "</h2>";
-        continue;
-      }
-
-      if(line.startsWith("### ")){
-        closeLists();
-        html += "<h3>" + inlineFormat(line.slice(4)) + "</h3>";
-        continue;
-      }
-
-      if(/^(\*|-)\s+/.test(line)){
-        if(inOL){ html += "</ol>"; inOL = false; }
-        if(!inUL){ html += "<ul>"; inUL = true; }
-        html += "<li>" + inlineFormat(line.replace(/^(\*|-)\s+/, "")) + "</li>";
-        continue;
-      }
-
-      if(/^\d+(\)|\.|-)\s+/.test(line)){
-        if(inUL){ html += "</ul>"; inUL = false; }
-        if(!inOL){ html += "<ol>"; inOL = true; }
-        html += "<li>" + inlineFormat(line.replace(/^\d+(\)|\.|-)\s+/, "")) + "</li>";
-        continue;
-      }
-
-      closeLists();
-      html += "<p>" + inlineFormat(line) + "</p>";
-    }
-
-    closeLists();
-    return html.replace(/<p><\/p>(\s*<p><\/p>)+/g, "<p></p>");
+    return html;
   }
 
   function inlineFormat(text){
@@ -653,7 +969,7 @@ La clase debe sentirse pastoral, bíblica, clara y lista para ser enseñada en u
   function copiar(){
     const texto = document.getElementById("resultado").value || "";
     if(!texto.trim()){
-      alert("Primero genera una clase.");
+      alert("Primero genera un contenido.");
       return;
     }
     navigator.clipboard.writeText(texto)
@@ -663,12 +979,15 @@ La clase debe sentirse pastoral, bíblica, clara y lista para ser enseñada en u
 
   function enviarWhatsApp(){
     const texto = document.getElementById("resultado").value || "";
+    const tipoContenido = document.getElementById("tipoContenido").value;
+    const nombreContenido = getNombreContenido(tipoContenido);
+
     if(!texto.trim()){
-      alert("Primero genera una clase.");
+      alert("Primero genera un contenido.");
       return;
     }
 
-    const mensaje = "Clase para Célula:\n\n" + texto;
+    const mensaje = nombreContenido + ":\n\n" + texto;
     const url = "https://wa.me/?text=" + encodeURIComponent(mensaje);
     window.open(url, "_blank");
   }
@@ -676,11 +995,14 @@ La clase debe sentirse pastoral, bíblica, clara y lista para ser enseñada en u
   function descargarTXT() {
     const contenido = document.getElementById("resultado").value || "";
     if (!contenido.trim()) {
-      alert("Primero genera una clase para poder descargarla.");
+      alert("Primero genera un contenido para poder descargarlo.");
       return;
     }
 
-    const tema = (document.getElementById("tema").value || "clase-celula").trim().replace(/[^\w\-]+/g, "_");
+    const tipoContenido = document.getElementById("tipoContenido").value;
+    const nombreBase = getNombreContenido(tipoContenido).toLowerCase().replace(/\s+/g, "-");
+    const tema = (document.getElementById("tema").value || nombreBase).trim().replace(/[^\w\-]+/g, "_");
+
     const blob = new Blob([contenido], { type:"text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
 
@@ -693,62 +1015,9 @@ La clase debe sentirse pastoral, bíblica, clara y lista para ser enseñada en u
     URL.revokeObjectURL(url);
   }
 
-  function descargarPDF() {
-    const raw = document.getElementById("resultado").value || "";
-    if (!raw.trim()) {
-      alert("Primero genera una clase para poder descargarla.");
-      return;
-    }
-
-    const htmlContent = renderPremium(raw);
-    const tema = escapeHtml(document.getElementById("tema").value || "Clase para Célula");
-
-    const win = window.open("", "_blank");
-    win.document.open();
-    win.document.write(`
-      <!DOCTYPE html>
-      <html lang="es">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>${tema}</title>
-        <style>
-          body{
-            font-family: Arial, sans-serif;
-            padding: 26px;
-            line-height: 1.6;
-            color:#111827;
-            font-size:14px;
-          }
-          h2{
-            margin: 16px 0 10px;
-            font-size: 20px;
-            border-left: 4px solid #16a34a;
-            padding-left: 10px;
-          }
-          h3{
-            margin: 14px 0 8px;
-            font-size: 16px;
-          }
-          p{ margin: 8px 0; font-size:14px; }
-          ul,ol{ margin: 8px 0 12px 22px; }
-          li{ margin:4px 0; font-size:14px; }
-          hr{ border:none; border-top:1px solid #ddd; margin:14px 0; }
-        </style>
-      </head>
-      <body>
-        ${htmlContent}
-        <script>
-          window.onload = () => { window.print(); };
-        <\/script>
-      </body>
-      </html>
-    `);
-    win.document.close();
-  }
-
   function limpiar(){
     document.getElementById("tema").value = "";
+    document.getElementById("textoBase").value = "";
     document.getElementById("resultado").value = "";
     document.getElementById("vista").innerHTML = "";
     document.getElementById("estado").textContent = "";
@@ -763,21 +1032,9 @@ La clase debe sentirse pastoral, bíblica, clara y lista para ser enseñada en u
       .replaceAll("'","&#039;");
   }
 
+  actualizarQuickButtons();
+  actualizarContextoLabel();
   checkAuth();
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
