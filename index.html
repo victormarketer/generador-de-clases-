@@ -469,38 +469,65 @@ async function compartirClase() {
     }
 
     const prompt = `
-Genera una clase para una ${tipo} con un tono ${tono}.
+Actúa como un pastor y maestro bíblico con experiencia en discipulado y formación de líderes de células.
 
-Tema: ${tema}
+Debes crear una enseñanza para una ${tipo}, con tono ${tono}, que sea clara, bíblica, pastoral, cristocéntrica y práctica.
 
-IMPORTANTE:
+Tema de la clase:
+${tema}
+
+INSTRUCCIONES IMPORTANTES:
 - Escribe en TEXTO LIMPIO.
 - NO uses Markdown.
 - NO uses símbolos como ###, ##, **, *, ni ---.
-- NO uses formato de blog.
-- Usa títulos simples como:
-  TITULO
-  OBJETIVO
-  TEXTO BASE
-  INTRODUCCIÓN
-  DESARROLLO BÍBLICO
-  APLICACIÓN PRÁCTICA
-  PREGUNTAS PARA EL GRUPO
-  ORACIÓN FINAL
+- Usa lenguaje pastoral, claro y directo.
+- Evita respuestas superficiales, repetitivas o demasiado largas.
+- No escribas como artículo ni como sermón extenso.
+- Escribe como una clase lista para enseñar en una célula.
+- Mantén cada sección concreta, útil y fácil de explicar.
 
-Estructura:
+ENFOQUE:
+- La enseñanza debe ser bíblica, cristocéntrica y aplicable.
+- Debe mostrar qué enseña el texto sobre Dios, el evangelio y la vida cristiana.
+- Debe incluir aplicación a la vida personal, familiar y espiritual.
+- Debe ayudar al líder a enseñar con claridad, no solo a leer contenido largo.
+
+ANTES DE REDACTAR:
+Primero organiza internamente un bosquejo breve con los puntos principales.
+Luego desarrolla la clase con orden, claridad y sencillez.
+
+ESTRUCTURA OBLIGATORIA:
+
 TITULO
-OBJETIVO
-TEXTO BASE
+Máximo 12 palabras.
+
+OBJETIVO DE LA CLASE
+Solo 1 frase clara.
+
+TEXTO BIBLICO BASE
+Incluye el pasaje principal y una breve referencia al contexto.
+
+IDEA CENTRAL
+Resume en 1 frase la verdad principal de la clase.
+
 INTRODUCCIÓN
-DESARROLLO BÍBLICO
-APLICACIÓN PRÁCTICA
+Máximo 1 párrafo breve y directo.
+
+DESARROLLO BIBLICO
+Desarrolla máximo 3 puntos principales.
+Cada punto debe ser breve, claro y fácil de enseñar.
+
+APLICACIÓN PRACTICA
+Incluye 3 aplicaciones concretas y accionables.
+
 PREGUNTAS PARA EL GRUPO
+Incluye exactamente 4 preguntas claras y conversacionales.
+
 ORACIÓN FINAL
+Escribe una oración pastoral breve, cálida y alineada al tema.
 
-Mantén el contenido bíblico, pastoral y práctico.
+La clase debe sentirse pastoral, sólida, ordenada y lista para usar en una célula.
 `;
-
     resultado.value = "Generando...";
     vista.innerHTML = "<p><strong>Generando...</strong></p>";
     estado.textContent = "Generando clase...";
@@ -723,6 +750,7 @@ Mantén el contenido bíblico, pastoral y práctico.
 </script>
 </body>
 </html>
+
 
 
 
