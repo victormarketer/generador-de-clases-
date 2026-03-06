@@ -450,24 +450,37 @@ if ("serviceWorker" in navigator) {
     }
 
     const prompt = `
+const prompt = `
 Genera una clase para una ${tipo} con un tono ${tono}.
 
 Tema: ${tema}
 
-Instrucciones:
-- Entrégala en un formato claro y bien organizado.
-- Usa títulos y subtítulos útiles.
-- Incluye:
-  1) Título
-  2) Objetivo
-  3) Texto base
-  4) Introducción
-  5) Desarrollo bíblico
-  6) Aplicación práctica
-  7) Preguntas para el grupo
-  8) Oración final
-- No expliques que eres una IA.
-- Mantén el contenido bíblico, pastoral y práctico.
+IMPORTANTE:
+- Escribe en TEXTO LIMPIO.
+- NO uses Markdown.
+- NO uses símbolos como ###, ##, **, *, ni ---.
+- NO uses formato de blog.
+- Usa títulos simples como:
+  TITULO
+  OBJETIVO
+  TEXTO BASE
+  INTRODUCCIÓN
+  DESARROLLO BÍBLICO
+  APLICACIÓN PRÁCTICA
+  PREGUNTAS PARA EL GRUPO
+  ORACIÓN FINAL
+
+Estructura:
+TITULO
+OBJETIVO
+TEXTO BASE
+INTRODUCCIÓN
+DESARROLLO BÍBLICO
+APLICACIÓN PRÁCTICA
+PREGUNTAS PARA EL GRUPO
+ORACIÓN FINAL
+
+Mantén el contenido bíblico, pastoral y práctico.
 `;
 
     resultado.value = "Generando...";
@@ -692,4 +705,5 @@ Instrucciones:
 </script>
 </body>
 </html>
+
 
