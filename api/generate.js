@@ -59,9 +59,22 @@ export default async function handler(req, res) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }]
-      })
-    });
+  contents: [{
+    parts: [{
+      text: `
+Eres un teólogo pastoral especializado en discipulado y enseñanza bíblica en grupos pequeños.
+
+Genera una clase que sea:
+- bíblicamente fiel
+- pastoral
+- clara
+- aplicable
+
+${prompt}
+`
+    }]
+  }]
+})
 
     const data = await response.json().catch(() => ({}));
 
@@ -82,3 +95,4 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: "Error interno", details: String(e) });
   }
 }
+
