@@ -89,14 +89,6 @@
     font-size:12px;
   }
 
-  .row{
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    align-items:center;
-    justify-content:center;
-  }
-
   .field{
     width:100%;
     text-align:left;
@@ -150,9 +142,17 @@
     margin-bottom:12px;
   }
 
+  .controls-3{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:12px;
+    margin-bottom:12px;
+  }
+
   @media (max-width: 860px){
     .controls,
-    .controls-2{
+    .controls-2,
+    .controls-3{
       grid-template-columns: 1fr;
     }
   }
@@ -312,7 +312,6 @@
     <h1>Generador de Recursos Bíblicos</h1>
     <p class="lead">Prepara clases, sermones, devocionales y estudios bíblicos con una presentación más profesional y compártelos fácilmente.</p>
 
-    <!-- LOGIN -->
     <div id="loginView" class="panel loginBox">
       <div class="topbar">
         <span class="badge">🔒 Acceso privado</span>
@@ -331,7 +330,6 @@
       <p id="loginMsg" class="small"></p>
     </div>
 
-    <!-- APP -->
     <div id="appView" class="panel hidden">
       <div class="topbar">
         <span class="badge">✅ Acceso concedido</span>
@@ -353,7 +351,7 @@
 
         <div class="field">
           <label for="tipoContenido">Tipo de contenido</label>
-          <select id="tipoContenido" onchange="actualizarQuickButtons(); actualizarContextoLabel();">
+          <select id="tipoContenido" onchange="actualizarQuickButtons(); actualizarContextoLabel(); actualizarCantidadSerie();">
             <option value="celula">Clase para célula</option>
             <option value="sermon">Sermón</option>
             <option value="devocional">Devocional</option>
@@ -391,6 +389,24 @@
         <div class="field">
           <label for="textoBase">Texto bíblico base</label>
           <input id="textoBase" placeholder="Ej: Efesios 2:8-10">
+        </div>
+      </div>
+
+      <div class="controls-3">
+        <div class="field">
+          <label for="modoGeneracion">Modo de generación</label>
+          <select id="modoGeneracion" onchange="actualizarCantidadSerie(); actualizarLabelCantidadSerie();">
+            <option value="unico">Contenido único</option>
+            <option value="serie">Serie completa</option>
+          </select>
+        </div>
+
+        <div class="field" id="cantidadSerieWrap">
+          <label id="labelCantidadSerie" for="cantidadSerie">Cantidad de la serie</label>
+          <select id="cantidadSerie">
+            <option value="4">4 partes</option>
+            <option value="7">7 partes</option>
+          </select>
         </div>
       </div>
 
@@ -499,12 +515,13 @@
     document.getElementById("tipoContenido").value = tipo;
     actualizarQuickButtons();
     actualizarContextoLabel();
+    actualizarCantidadSerie();
   }
 
   function actualizarQuickButtons(){
     const tipo = document.getElementById("tipoContenido").value;
-
     const ids = ["celula", "sermon", "devocional", "estudio"];
+
     ids.forEach(id => {
       const btn = document.getElementById("quick-" + id);
       if(btn){
@@ -530,6 +547,47 @@
     }
   }
 
+  function actualizarLabelCantidadSerie(){
+    const tipo = document.getElementById("tipoContenido").value;
+    const modo = document.getElementById("modoGeneracion").value;
+    const label = document.getElementById("labelCantidadSerie");
+    const wrap = document.getElementById("cantidadSerieWrap");
+
+    if(modo !== "serie"){
+      wrap.classList.add("hidden");
+      return;
+    }
+
+    wrap.classList.remove("hidden");
+
+    if(tipo === "devocional"){
+      label.textContent = "Cantidad de días";
+    } else if(tipo === "estudio"){
+      label.textContent = "Cantidad de semanas";
+    } else {
+      label.textContent = "Cantidad de la serie";
+    }
+  }
+
+  function actualizarCantidadSerie(){
+    const tipo = document.getElementById("tipoContenido").value;
+    const modo = document.getElementById("modoGeneracion").value;
+    const cantidad = document.getElementById("cantidadSerie");
+
+    if(modo !== "serie"){
+      actualizarLabelCantidadSerie();
+      return;
+    }
+
+    if(tipo === "devocional"){
+      cantidad.value = "7";
+    } else {
+      cantidad.value = "4";
+    }
+
+    actualizarLabelCantidadSerie();
+  }
+
   function getNombreContenido(tipo){
     if(tipo === "celula") return "Clase para célula";
     if(tipo === "sermon") return "Sermón";
@@ -538,287 +596,8 @@
     return "Contenido bíblico";
   }
 
-  function construirPrompt({ tema, tipoContenido, contexto, tono, textoBase }){
-    const textoBaseFinal = textoBase?.trim()
-      ? textoBase.trim()
-      : "elige un texto bíblico apropiado y fiel al tema";
-
-    if(tipoContenido === "celula"){
-      return `
-Actúa como un pastor y maestro bíblico con amplia experiencia en discipulado, formación de líderes de células y enseñanza bíblica en la iglesia local.
-
-Debes crear una clase clara, bíblica, pastoral y práctica para una célula de contexto "${contexto}".
-
-Tema de la clase:
-${tema}
-
-Tono de la enseñanza:
-${tono}
-
-Texto bíblico base:
-${textoBaseFinal}
-
-INSTRUCCIONES IMPORTANTES
-
-Escribe en TEXTO LIMPIO.
-No uses Markdown.
-No uses símbolos como ###, ##, **, *, ni ---.
-No escribas como un artículo académico ni como un sermón demasiado largo.
-Escribe como una enseñanza clara y sencilla que un líder pueda usar fácilmente en una reunión de célula.
-
-Cada sección debe ser clara y breve.
-Evita párrafos demasiado largos.
-Escribe pensando en que el líder leerá y explicará el contenido.
-
-La enseñanza debe ser:
-bíblica
-cristocéntrica
-pastoral
-clara
-práctica para la vida cristiana.
-
-Evita respuestas superficiales o repetitivas.
-Mantén las secciones breves, claras y fáciles de explicar.
-
-Antes de escribir la enseñanza, organiza internamente un bosquejo breve y luego desarrolla cada sección con claridad.
-
-ESTRUCTURA OBLIGATORIA
-
-TITULO
-Máximo 12 palabras.
-
-OBJETIVO DE LA CLASE
-Explica en una sola frase qué transformación espiritual busca esta enseñanza.
-
-TEXTO BIBLICO BASE
-Incluye el pasaje principal y menciona brevemente el contexto bíblico.
-
-IDEA CENTRAL
-Resume en una sola frase la verdad principal de la enseñanza.
-
-DINÁMICA DE APERTURA
-Propón una dinámica breve y participativa relacionada con el tema y adecuada al público indicado.
-
-INTRODUCCIÓN
-Un párrafo breve que conecte el tema con la vida diaria de los creyentes.
-
-DESARROLLO BÍBLICO
-Explica el pasaje bíblico en máximo 3 puntos principales.
-Cada punto debe ser claro, pastoral y fácil de enseñar.
-
-APLICACIÓN PRÁCTICA
-Incluye 3 aplicaciones concretas para vivir esta verdad durante la semana.
-
-DESAFÍO DE LA SEMANA
-Propón un paso práctico que cada persona pueda aplicar durante los próximos días.
-
-PREGUNTAS PARA EL GRUPO
-Incluye exactamente 4 preguntas que ayuden a reflexionar y conversar.
-
-ORACIÓN FINAL
-Escribe una oración pastoral breve basada en el tema de la enseñanza.
-
-La clase debe sentirse pastoral, bíblica, clara y lista para ser enseñada en una célula.
-`;
-    }
-
-    if(tipoContenido === "sermon"){
-      return `
-Actúa como un predicador y maestro bíblico experimentado, con enfoque cristocéntrico, pastoral y fiel al texto.
-
-Debes desarrollar un sermón claro, bíblico y listo para predicar.
-
-Tema del sermón:
-${tema}
-
-Contexto o público:
-${contexto}
-
-Tono:
-${tono}
-
-Texto bíblico base:
-${textoBaseFinal}
-
-INSTRUCCIONES IMPORTANTES
-
-Escribe en TEXTO LIMPIO.
-No uses Markdown.
-No uses símbolos como ###, ##, **, *, ni ---.
-No escribas como un artículo académico.
-Escribe como material real para predicar.
-
-Cada sección debe ser clara y útil.
-Evita párrafos demasiado largos.
-Haz que cada punto tenga sustancia y aplicación.
-
-El sermón debe ser:
-bíblico
-cristocéntrico
-pastoral
-claro
-práctico
-predicable
-
-ESTRUCTURA OBLIGATORIA
-
-TITULO
-Máximo 12 palabras.
-
-OBJETIVO DEL SERMÓN
-Explica en una sola frase qué debe producir este mensaje en los oyentes.
-
-TEXTO BÍBLICO BASE
-Incluye el pasaje principal y menciona brevemente el contexto.
-
-IDEA CENTRAL
-Resume en una frase la verdad principal del sermón.
-
-INTRODUCCIÓN
-Breve, clara y conectada con la vida real.
-
-CONTEXTO BÍBLICO
-Explica el contexto del pasaje de forma sencilla.
-
-DESARROLLO
-Desarrolla el sermón en 3 puntos principales.
-Cada punto debe tener explicación y aplicación pastoral.
-
-APLICACIÓN PRÁCTICA
-Incluye 3 aplicaciones concretas.
-
-CONCLUSIÓN
-Cierra con fuerza y claridad.
-
-LLAMADO FINAL
-Haz un llamado pastoral coherente con el tema.
-`;
-    }
-
-    if(tipoContenido === "devocional"){
-      return `
-Actúa como un pastor que escribe devocionales bíblicos, cálidos, cristocéntricos y edificantes.
-
-Debes escribir un devocional claro, profundo y práctico.
-
-Tema del devocional:
-${tema}
-
-Contexto o público:
-${contexto}
-
-Tono:
-${tono}
-
-Texto bíblico base:
-${textoBaseFinal}
-
-INSTRUCCIONES IMPORTANTES
-
-Escribe en TEXTO LIMPIO.
-No uses Markdown.
-No uses símbolos como ###, ##, **, *, ni ---.
-No escribas de forma académica.
-Escribe de manera cálida, clara y espiritual.
-
-El devocional debe ser:
-bíblico
-cristocéntrico
-pastoral
-edificante
-práctico
-
-ESTRUCTURA OBLIGATORIA
-
-TITULO
-Máximo 12 palabras.
-
-TEXTO BÍBLICO CLAVE
-Incluye el pasaje principal.
-
-VERDAD CENTRAL
-Resume en una frase la enseñanza principal.
-
-REFLEXIÓN DEVOCIONAL
-Desarrolla una reflexión clara y pastoral.
-
-APLICACIÓN PERSONAL
-Incluye 3 aplicaciones breves y concretas.
-
-ORACIÓN FINAL
-Escribe una oración sencilla y pastoral basada en el tema.
-`;
-    }
-
-    if(tipoContenido === "estudio"){
-      return `
-Actúa como un maestro bíblico con claridad doctrinal, enfoque pastoral y capacidad para enseñar de forma sencilla.
-
-Debes desarrollar un estudio bíblico claro, formativo y útil para enseñar.
-
-Tema del estudio:
-${tema}
-
-Contexto o público:
-${contexto}
-
-Tono:
-${tono}
-
-Texto bíblico base:
-${textoBaseFinal}
-
-INSTRUCCIONES IMPORTANTES
-
-Escribe en TEXTO LIMPIO.
-No uses Markdown.
-No uses símbolos como ###, ##, **, *, ni ---.
-No escribas como un comentario académico demasiado técnico.
-Escribe como un estudio bíblico claro y formativo.
-
-El estudio debe ser:
-bíblico
-cristocéntrico
-claro
-formativo
-pastoral
-práctico
-
-ESTRUCTURA OBLIGATORIA
-
-TITULO
-Máximo 12 palabras.
-
-OBJETIVO DEL ESTUDIO
-Explica en una sola frase qué busca enseñar este estudio.
-
-PASAJE BASE
-Incluye el texto principal.
-
-CONTEXTO BÍBLICO
-Explica el contexto de forma sencilla.
-
-EXPLICACIÓN DEL TEXTO
-Desarrolla el contenido en 3 puntos principales.
-
-VERDADES PRINCIPALES
-Resume 3 enseñanzas claves.
-
-APLICACIÓN PRÁCTICA
-Incluye 3 aplicaciones concretas.
-
-PREGUNTAS PARA PROFUNDIZAR
-Incluye exactamente 5 preguntas.
-
-CIERRE
-Escribe un cierre breve y claro.
-`;
-    }
-
-    return `
-Actúa como un maestro bíblico pastoral.
-Desarrolla un contenido sobre el tema "${tema}" con tono "${tono}" y tomando como base "${textoBaseFinal}".
-`;
+  function getNombreModo(modo){
+    return modo === "serie" ? "serie" : "contenido";
   }
 
   async function compartirContenido() {
@@ -853,8 +632,11 @@ Desarrolla un contenido sobre el tema "${tema}" con tono "${tono}" y tomando com
     document.getElementById("tipoContenido").value = "celula";
     document.getElementById("contexto").value = "general";
     document.getElementById("tono").value = "pastoral";
+    document.getElementById("modoGeneracion").value = "unico";
+    document.getElementById("cantidadSerie").value = "4";
     actualizarQuickButtons();
     actualizarContextoLabel();
+    actualizarCantidadSerie();
     setTab("premium");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -865,6 +647,8 @@ Desarrolla un contenido sobre el tema "${tema}" con tono "${tono}" y tomando com
     const contexto = document.getElementById("contexto").value;
     const tono = document.getElementById("tono").value;
     const textoBase = document.getElementById("textoBase").value.trim();
+    const modoGeneracion = document.getElementById("modoGeneracion").value;
+    const cantidadSerie = document.getElementById("cantidadSerie").value;
 
     const resultado = document.getElementById("resultado");
     const vista = document.getElementById("vista");
@@ -876,25 +660,28 @@ Desarrolla un contenido sobre el tema "${tema}" con tono "${tono}" y tomando com
       return;
     }
 
-    const prompt = construirPrompt({
-      tema,
-      tipoContenido,
-      contexto,
-      tono,
-      textoBase
-    });
-
     const nombreContenido = getNombreContenido(tipoContenido);
+    const nombreModo = getNombreModo(modoGeneracion);
 
     resultado.value = "Generando...";
-    vista.innerHTML = `<p><strong>Generando ${escapeHtml(nombreContenido.toLowerCase())}...</strong></p>`;
-    estado.textContent = `Generando ${nombreContenido.toLowerCase()}...`;
+    vista.innerHTML = `<p><strong>Generando ${escapeHtml(nombreModo)}...</strong></p>`;
+    estado.textContent = modoGeneracion === "serie"
+      ? `Generando serie de ${nombreContenido.toLowerCase()}...`
+      : `Generando ${nombreContenido.toLowerCase()}...`;
 
     try {
       const respuesta = await fetch("/api/generate", {
         method:"POST",
         headers:{ "Content-Type":"application/json" },
-        body: JSON.stringify({ prompt })
+        body: JSON.stringify({
+          tema,
+          tipoContenido,
+          contexto,
+          tono,
+          textoBase,
+          modoGeneracion,
+          cantidadSerie
+        })
       });
 
       const data = await respuesta.json().catch(() => ({}));
@@ -913,7 +700,11 @@ Desarrolla un contenido sobre el tema "${tema}" con tono "${tono}" y tomando com
       const texto = data.text || "No llegó texto desde Gemini.";
       resultado.value = texto;
       vista.innerHTML = renderPremium(texto);
-      estado.textContent = `${nombreContenido} generado correctamente ✅`;
+
+      estado.textContent = modoGeneracion === "serie"
+        ? `Serie generada correctamente ✅`
+        : `${nombreContenido} generado correctamente ✅`;
+
       setTab("premium");
     } catch (e) {
       resultado.value = "Error de conexión: " + e.message;
@@ -980,6 +771,7 @@ Desarrolla un contenido sobre el tema "${tema}" con tono "${tono}" y tomando com
   function enviarWhatsApp(){
     const texto = document.getElementById("resultado").value || "";
     const tipoContenido = document.getElementById("tipoContenido").value;
+    const modoGeneracion = document.getElementById("modoGeneracion").value;
     const nombreContenido = getNombreContenido(tipoContenido);
 
     if(!texto.trim()){
@@ -987,7 +779,11 @@ Desarrolla un contenido sobre el tema "${tema}" con tono "${tono}" y tomando com
       return;
     }
 
-    const mensaje = nombreContenido + ":\n\n" + texto;
+    const encabezado = modoGeneracion === "serie"
+      ? `Serie de ${nombreContenido.toLowerCase()}`
+      : nombreContenido;
+
+    const mensaje = encabezado + ":\n\n" + texto;
     const url = "https://wa.me/?text=" + encodeURIComponent(mensaje);
     window.open(url, "_blank");
   }
@@ -1000,8 +796,12 @@ Desarrolla un contenido sobre el tema "${tema}" con tono "${tono}" y tomando com
     }
 
     const tipoContenido = document.getElementById("tipoContenido").value;
+    const modoGeneracion = document.getElementById("modoGeneracion").value;
     const nombreBase = getNombreContenido(tipoContenido).toLowerCase().replace(/\s+/g, "-");
-    const tema = (document.getElementById("tema").value || nombreBase).trim().replace(/[^\w\-]+/g, "_");
+    const prefijo = modoGeneracion === "serie" ? "serie-" : "";
+    const tema = (document.getElementById("tema").value || (prefijo + nombreBase))
+      .trim()
+      .replace(/[^\w\-]+/g, "_");
 
     const blob = new Blob([contenido], { type:"text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
@@ -1034,6 +834,7 @@ Desarrolla un contenido sobre el tema "${tema}" con tono "${tono}" y tomando com
 
   actualizarQuickButtons();
   actualizarContextoLabel();
+  actualizarCantidadSerie();
   checkAuth();
 </script>
 </body>
