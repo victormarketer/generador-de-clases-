@@ -47,7 +47,12 @@ function sanitizeCount(value, fallback = 4) {
   return Math.floor(num);
 }
 
-function construirPrompt({
+function getCantidadFinal(tipoContenido, cantidadSerie) {
+  if (tipoContenido === "devocional") return 7;
+  return sanitizeCount(cantidadSerie, 4);
+}
+
+function getSchemaAndPrompt({
   tema,
   tipoContenido,
   contexto,
@@ -66,602 +71,276 @@ function construirPrompt({
     "elige un texto bíblico apropiado y fiel al tema"
   );
 
-  let cantidadFinal = sanitizeCount(cantidadSerie, 4);
-
-  if (tipoFinal === "devocional") {
-    cantidadFinal = 7;
-  } else {
-    cantidadFinal = 4;
-  }
+  const cantidadFinal = getCantidadFinal(tipoFinal, cantidadSerie);
 
   if (modoFinal === "serie") {
     if (tipoFinal === "celula") {
       return `
-Actúa como un pastor y maestro bíblico con amplia experiencia en discipulado, formación de líderes de células y enseñanza bíblica en la iglesia local.
+Responde ÚNICAMENTE con JSON válido.
+No uses markdown.
+No agregues comentarios.
+No agregues texto fuera del JSON.
 
-Debes crear una SERIE COMPLETA de ${cantidadFinal} clases para célula de contexto "${contextoFinal}".
+Eres un pastor y maestro bíblico con amplia experiencia en discipulado, formación de líderes de células y enseñanza bíblica en la iglesia local.
 
-Tema general de la serie:
+Debes crear una serie completa de ${cantidadFinal} clases para célula de contexto "${contextoFinal}".
+
+Tema general:
 ${temaFinal}
 
-Tono de la serie:
+Tono:
 ${tonoFinal}
 
 Texto bíblico base:
 ${textoBaseFinal}
 
-INSTRUCCIONES IMPORTANTES
+Devuelve exactamente este formato:
 
-Escribe en TEXTO LIMPIO.
-No uses Markdown.
-No uses símbolos como ###, ##, **, *, ni ---.
-No escribas como artículo académico.
-Escribe como material pastoral, claro, práctico y fácil de enseñar.
+{
+  "tipo": "serie_clase",
+  "titulo_serie": "string",
+  "objetivo_general": "string",
+  "idea_central": "string",
+  "semanas": [
+    {
+      "semana": 1,
+      "titulo": "string",
+      "objetivo": "string",
+      "texto_biblico_base": "string",
+      "idea_central": "string",
+      "dinamica_apertura": "string",
+      "introduccion": "string",
+      "desarrollo_biblico": ["string", "string", "string"],
+      "aplicacion_practica": ["string", "string", "string"],
+      "desafio_semana": "string",
+      "preguntas_grupo": ["string", "string", "string", "string"],
+      "oracion_final": "string"
+    }
+  ]
+}
 
-Primero incluye exactamente este formato:
-
-TITULO GENERAL DE LA SERIE
-...
-
-OBJETIVO GENERAL DE LA SERIE
-...
-
-IDEA CENTRAL DE LA SERIE
-...
-
-Luego desarrolla ${cantidadFinal} clases consecutivas.
-
-Cada clase debe incluir exactamente este formato:
-
-SEMANA 1
-
-TITULO: ...
-OBJETIVO DE LA CLASE: ...
-TEXTO BIBLICO BASE: ...
-IDEA CENTRAL: ...
-
-DINÁMICA DE APERTURA:
-...
-
-INTRODUCCIÓN:
-...
-
-DESARROLLO BÍBLICO:
-1. ...
-2. ...
-3. ...
-
-APLICACIÓN PRÁCTICA:
-1. ...
-2. ...
-3. ...
-
-DESAFÍO DE LA SEMANA:
-...
-
-PREGUNTAS PARA EL GRUPO:
-1. ...
-2. ...
-3. ...
-4. ...
-
-ORACIÓN FINAL:
-...
-
-REGLAS IMPORTANTES
-
-Cada clase debe avanzar de manera lógica sobre la anterior.
-La progresión debe sentirse conectada, pastoral y útil para una serie real.
-Incluye exactamente 4 preguntas para el grupo en cada clase.
-Usa siempre el mismo formato visual en cada semana.
+REGLAS:
+- "semanas" debe tener exactamente ${cantidadFinal} elementos.
+- "desarrollo_biblico" debe tener exactamente 3 elementos.
+- "aplicacion_practica" debe tener exactamente 3 elementos.
+- "preguntas_grupo" debe tener exactamente 4 elementos.
+- Todo en español.
+- La serie debe ser cristocéntrica, bíblica, clara, pastoral y práctica.
 `;
     }
 
     if (tipoFinal === "sermon") {
       return `
-Actúa como un predicador y maestro bíblico experimentado, con enfoque cristocéntrico, pastoral y fiel al texto.
+Responde ÚNICAMENTE con JSON válido.
+No uses markdown.
+No agregues comentarios.
+No agregues texto fuera del JSON.
 
-Debes crear una SERIE COMPLETA de ${cantidadFinal} sermones para el contexto "${contextoFinal}".
+Eres un predicador y maestro bíblico experimentado, con enfoque cristocéntrico, pastoral y fiel al texto.
 
-Tema general de la serie:
+Debes crear una serie completa de ${cantidadFinal} sermones para el contexto "${contextoFinal}".
+
+Tema general:
 ${temaFinal}
 
-Tono de la serie:
+Tono:
 ${tonoFinal}
 
 Texto bíblico base:
 ${textoBaseFinal}
 
-INSTRUCCIONES IMPORTANTES
+Devuelve exactamente este formato:
 
-Escribe en TEXTO LIMPIO.
-No uses Markdown.
-No uses símbolos como ###, ##, **, *, ni ---.
-No escribas como artículo académico.
-Escribe como material real para predicar.
+{
+  "tipo": "serie_sermon",
+  "titulo_serie": "string",
+  "objetivo_general": "string",
+  "idea_central": "string",
+  "semanas": [
+    {
+      "semana": 1,
+      "titulo": "string",
+      "objetivo": "string",
+      "texto_biblico_base": "string",
+      "idea_central": "string",
+      "introduccion": "string",
+      "contexto_biblico": "string",
+      "desarrollo": ["string", "string", "string"],
+      "aplicacion_practica": ["string", "string", "string"],
+      "conclusion": "string",
+      "llamado_final": "string"
+    }
+  ]
+}
 
-Primero incluye exactamente este formato:
-
-TITULO GENERAL DE LA SERIE
-...
-
-OBJETIVO GENERAL DE LA SERIE
-...
-
-IDEA CENTRAL DE LA SERIE
-...
-
-Luego desarrolla ${cantidadFinal} sermones.
-
-Cada sermón debe incluir exactamente este formato:
-
-SEMANA 1
-
-TITULO: ...
-OBJETIVO DEL SERMÓN: ...
-TEXTO BÍBLICO BASE: ...
-IDEA CENTRAL: ...
-
-INTRODUCCIÓN:
-...
-
-CONTEXTO BÍBLICO:
-...
-
-DESARROLLO:
-1. ...
-2. ...
-3. ...
-
-APLICACIÓN PRÁCTICA:
-1. ...
-2. ...
-3. ...
-
-CONCLUSIÓN:
-...
-
-LLAMADO FINAL:
-...
-
-REGLAS IMPORTANTES
-
-Cada sermón debe avanzar sobre el anterior.
-La serie debe sentirse coherente y progresiva.
-Cada sermón debe ser predicable, pastoral, bíblico y práctico.
-Usa siempre el mismo formato visual en cada semana.
+REGLAS:
+- "semanas" debe tener exactamente ${cantidadFinal} elementos.
+- "desarrollo" debe tener exactamente 3 elementos.
+- "aplicacion_practica" debe tener exactamente 3 elementos.
+- Todo en español.
+- La serie debe ser bíblica, cristocéntrica, pastoral y predicable.
 `;
     }
 
     if (tipoFinal === "devocional") {
       return `
-Actúa como un pastor que escribe devocionales bíblicos, cálidos, cristocéntricos y edificantes.
+Responde ÚNICAMENTE con JSON válido.
+No uses markdown.
+No agregues comentarios.
+No agregues texto fuera del JSON.
 
-Debes crear una SERIE DEVOCIONAL de ${cantidadFinal} días para el contexto "${contextoFinal}".
+Eres un pastor que escribe devocionales bíblicos, cálidos, cristocéntricos y edificantes.
 
-Tema general de la serie:
+Debes crear una serie devocional de ${cantidadFinal} días para el contexto "${contextoFinal}".
+
+Tema general:
 ${temaFinal}
 
-Tono de la serie:
+Tono:
 ${tonoFinal}
 
 Texto bíblico base:
 ${textoBaseFinal}
 
-INSTRUCCIONES IMPORTANTES
+Devuelve exactamente este formato:
 
-Escribe en TEXTO LIMPIO.
-No uses Markdown.
-No uses símbolos como ###, ##, **, *, ni ---.
-No escribas de forma académica.
-Escribe de manera cálida, espiritual, pastoral y clara.
+{
+  "tipo": "serie_devocional",
+  "titulo_serie": "string",
+  "objetivo_general": "string",
+  "idea_central": "string",
+  "dias": [
+    {
+      "dia": 1,
+      "titulo": "string",
+      "texto_biblico_clave": "string",
+      "verdad_central": "string",
+      "reflexion_devocional": "string",
+      "aplicacion_personal": ["string", "string", "string"],
+      "oracion_final": "string"
+    }
+  ]
+}
 
-Primero incluye exactamente este formato:
-
-TITULO GENERAL DE LA SERIE
-...
-
-OBJETIVO GENERAL
-...
-
-IDEA CENTRAL DE LA SERIE
-...
-
-Luego desarrolla:
-DÍA 1
-DÍA 2
-DÍA 3
-hasta completar los ${cantidadFinal} días.
-
-CADA DÍA DEBE RESPETAR EXACTAMENTE ESTE FORMATO:
-
-DÍA 1
-
-TITULO: ...
-TEXTO BÍBLICO CLAVE: ...
-VERDAD CENTRAL: ...
-
-REFLEXIÓN DEVOCIONAL:
-...
-
-APLICACIÓN PERSONAL:
-1. ...
-2. ...
-3. ...
-
-ORACIÓN FINAL:
-...
-
-REGLAS IMPORTANTES
-
-Cada día debe tener continuidad con el anterior.
-La serie debe sentirse progresiva y espiritualmente conectada.
-Incluye exactamente 3 aplicaciones personales por día.
-No cambies los nombres de las secciones.
-Usa siempre dos puntos después de TITULO, TEXTO BÍBLICO CLAVE y VERDAD CENTRAL.
-Deja REFLEXIÓN DEVOCIONAL, APLICACIÓN PERSONAL y ORACIÓN FINAL como encabezados en línea separada.
-Usa siempre el mismo formato visual en cada día.
+REGLAS:
+- "dias" debe tener exactamente ${cantidadFinal} elementos.
+- "aplicacion_personal" debe tener exactamente 3 elementos por día.
+- Todo en español.
+- Debe ser pastoral, cálido, bíblico y práctico.
 `;
     }
 
     if (tipoFinal === "estudio") {
       return `
-Actúa como un maestro bíblico con claridad doctrinal, enfoque pastoral y capacidad para enseñar de forma sencilla.
+Responde ÚNICAMENTE con JSON válido.
+No uses markdown.
+No agregues comentarios.
+No agregues texto fuera del JSON.
 
-Debes crear una SERIE de ${cantidadFinal} estudios bíblicos para el contexto "${contextoFinal}".
+Eres un maestro bíblico con claridad doctrinal, enfoque pastoral y capacidad para enseñar de forma sencilla.
 
-Tema general de la serie:
+Debes crear una serie de ${cantidadFinal} estudios bíblicos para el contexto "${contextoFinal}".
+
+Tema general:
 ${temaFinal}
 
-Tono de la serie:
+Tono:
 ${tonoFinal}
 
 Texto bíblico base:
 ${textoBaseFinal}
 
-INSTRUCCIONES IMPORTANTES
+Devuelve exactamente este formato:
 
-Escribe en TEXTO LIMPIO.
-No uses Markdown.
-No uses símbolos como ###, ##, **, *, ni ---.
-No escribas como comentario académico demasiado técnico.
-Escribe como un estudio bíblico claro, pastoral y formativo.
+{
+  "tipo": "serie_estudio",
+  "titulo_serie": "string",
+  "objetivo_general": "string",
+  "idea_central": "string",
+  "semanas": [
+    {
+      "semana": 1,
+      "titulo": "string",
+      "objetivo_del_estudio": "string",
+      "pasaje_base": "string",
+      "contexto_biblico": "string",
+      "explicacion_texto": ["string", "string", "string"],
+      "verdades_principales": ["string", "string", "string"],
+      "aplicacion_practica": ["string", "string", "string"],
+      "preguntas_para_profundizar": ["string", "string", "string", "string", "string"],
+      "cierre": "string"
+    }
+  ]
+}
 
-Primero incluye exactamente este formato:
-
-TITULO GENERAL DE LA SERIE
-...
-
-OBJETIVO GENERAL DE LA SERIE
-...
-
-IDEA CENTRAL DE LA SERIE
-...
-
-Luego desarrolla ${cantidadFinal} estudios bíblicos.
-
-Cada estudio debe incluir exactamente este formato:
-
-SEMANA 1
-
-TITULO: ...
-OBJETIVO DEL ESTUDIO: ...
-PASAJE BASE: ...
-
-CONTEXTO BÍBLICO:
-...
-
-EXPLICACIÓN DEL TEXTO:
-1. ...
-2. ...
-3. ...
-
-VERDADES PRINCIPALES:
-1. ...
-2. ...
-3. ...
-
-APLICACIÓN PRÁCTICA:
-1. ...
-2. ...
-3. ...
-
-PREGUNTAS PARA PROFUNDIZAR:
-1. ...
-2. ...
-3. ...
-4. ...
-5. ...
-
-CIERRE:
-...
-
-REGLAS IMPORTANTES
-
-Cada estudio debe construir sobre el anterior.
-Incluye exactamente 3 verdades principales.
-Incluye exactamente 3 aplicaciones prácticas.
-Incluye exactamente 5 preguntas para profundizar.
-Usa siempre el mismo formato visual en cada semana.
+REGLAS:
+- "semanas" debe tener exactamente ${cantidadFinal} elementos.
+- "explicacion_texto" debe tener exactamente 3 elementos.
+- "verdades_principales" debe tener exactamente 3 elementos.
+- "aplicacion_practica" debe tener exactamente 3 elementos.
+- "preguntas_para_profundizar" debe tener exactamente 5 elementos.
+- Todo en español.
+- Debe ser claro, bíblico, cristocéntrico y formativo.
 `;
     }
   }
 
   if (tipoFinal === "celula") {
     return `
-Actúa como un pastor y maestro bíblico con amplia experiencia en discipulado, formación de líderes de células y enseñanza bíblica en la iglesia local.
+Responde ÚNICAMENTE con JSON válido.
+No uses markdown.
+No agregues comentarios.
+No agregues texto fuera del JSON.
+
+Eres un pastor y maestro bíblico con amplia experiencia en discipulado, formación de líderes de células y enseñanza bíblica en la iglesia local.
 
 Debes crear una clase clara, bíblica, pastoral y práctica para una célula de contexto "${contextoFinal}".
 
-Tema de la clase:
+Tema:
 ${temaFinal}
 
-Tono de la enseñanza:
+Tono:
 ${tonoFinal}
 
 Texto bíblico base:
 ${textoBaseFinal}
 
-INSTRUCCIONES IMPORTANTES
+Devuelve exactamente este formato:
 
-Escribe en TEXTO LIMPIO.
-No uses Markdown.
-No uses símbolos como ###, ##, **, *, ni ---.
-No escribas como un artículo académico ni como un sermón demasiado largo.
-Escribe como una enseñanza clara y sencilla que un líder pueda usar fácilmente en una reunión de célula.
+{
+  "tipo": "clase",
+  "titulo": "string",
+  "objetivo": "string",
+  "texto_biblico_base": "string",
+  "idea_central": "string",
+  "dinamica_apertura": "string",
+  "introduccion": "string",
+  "desarrollo_biblico": ["string", "string", "string"],
+  "aplicacion_practica": ["string", "string", "string"],
+  "desafio_semana": "string",
+  "preguntas_grupo": ["string", "string", "string", "string"],
+  "oracion_final": "string"
+}
 
-Cada sección debe ser clara y breve.
-Evita párrafos demasiado largos.
-Escribe pensando en que el líder leerá y explicará el contenido.
-
-La enseñanza debe ser:
-bíblica
-cristocéntrica
-pastoral
-clara
-práctica para la vida cristiana.
-
-Evita respuestas superficiales o repetitivas.
-Mantén las secciones breves, claras y fáciles de explicar.
-
-Antes de escribir la enseñanza, organiza internamente un bosquejo breve y luego desarrolla cada sección con claridad.
-
-USA EXACTAMENTE ESTE FORMATO:
-
-TITULO: ...
-OBJETIVO DE LA CLASE: ...
-TEXTO BIBLICO BASE: ...
-IDEA CENTRAL: ...
-
-DINÁMICA DE APERTURA:
-...
-
-INTRODUCCIÓN:
-...
-
-DESARROLLO BÍBLICO:
-1. ...
-2. ...
-3. ...
-
-APLICACIÓN PRÁCTICA:
-1. ...
-2. ...
-3. ...
-
-DESAFÍO DE LA SEMANA:
-...
-
-PREGUNTAS PARA EL GRUPO:
-1. ...
-2. ...
-3. ...
-4. ...
-
-ORACIÓN FINAL:
-...
+REGLAS:
+- "desarrollo_biblico" debe tener exactamente 3 elementos.
+- "aplicacion_practica" debe tener exactamente 3 elementos.
+- "preguntas_grupo" debe tener exactamente 4 elementos.
+- Todo en español.
+- Debe ser cristocéntrica, bíblica, clara, pastoral y práctica.
 `;
   }
 
   if (tipoFinal === "sermon") {
     return `
-Actúa como un predicador y maestro bíblico experimentado, con enfoque cristocéntrico, pastoral y fiel al texto.
+Responde ÚNICAMENTE con JSON válido.
+No uses markdown.
+No agregues comentarios.
+No agregues texto fuera del JSON.
+
+Eres un predicador y maestro bíblico experimentado, con enfoque cristocéntrico, pastoral y fiel al texto.
 
 Debes desarrollar un sermón claro, bíblico y listo para predicar.
-
-Tema del sermón:
-${temaFinal}
-
-Contexto o público:
-${contextoFinal}
-
-Tono:
-${tonoFinal}
-
-Texto bíblico base:
-${textoBaseFinal}
-
-INSTRUCCIONES IMPORTANTES
-
-Escribe en TEXTO LIMPIO.
-No uses Markdown.
-No uses símbolos como ###, ##, **, *, ni ---.
-No escribas como un artículo académico.
-Escribe como material real para predicar.
-
-Cada sección debe ser clara y útil.
-Evita párrafos demasiado largos.
-Haz que cada punto tenga sustancia y aplicación.
-
-El sermón debe ser:
-bíblico
-cristocéntrico
-pastoral
-claro
-práctico
-predicable
-
-USA EXACTAMENTE ESTE FORMATO:
-
-TITULO: ...
-OBJETIVO DEL SERMÓN: ...
-TEXTO BÍBLICO BASE: ...
-IDEA CENTRAL: ...
-
-INTRODUCCIÓN:
-...
-
-CONTEXTO BÍBLICO:
-...
-
-DESARROLLO:
-1. ...
-2. ...
-3. ...
-
-APLICACIÓN PRÁCTICA:
-1. ...
-2. ...
-3. ...
-
-CONCLUSIÓN:
-...
-
-LLAMADO FINAL:
-...
-`;
-  }
-
-  if (tipoFinal === "devocional") {
-    return `
-Actúa como un pastor que escribe devocionales bíblicos, cálidos, cristocéntricos y edificantes.
-
-Debes escribir un devocional claro, profundo y práctico.
-
-Tema del devocional:
-${temaFinal}
-
-Contexto o público:
-${contextoFinal}
-
-Tono:
-${tonoFinal}
-
-Texto bíblico base:
-${textoBaseFinal}
-
-INSTRUCCIONES IMPORTANTES
-
-Escribe en TEXTO LIMPIO.
-No uses Markdown.
-No uses símbolos como ###, ##, **, *, ni ---.
-No escribas de forma académica.
-Escribe de manera cálida, clara y espiritual.
-
-El devocional debe ser:
-bíblico
-cristocéntrico
-pastoral
-edificante
-práctico
-
-USA EXACTAMENTE ESTE FORMATO:
-
-TITULO: ...
-TEXTO BÍBLICO CLAVE: ...
-VERDAD CENTRAL: ...
-
-REFLEXIÓN DEVOCIONAL:
-...
-
-APLICACIÓN PERSONAL:
-1. ...
-2. ...
-3. ...
-
-ORACIÓN FINAL:
-...
-
-REGLAS IMPORTANTES
-
-Usa siempre dos puntos después de TITULO, TEXTO BÍBLICO CLAVE y VERDAD CENTRAL.
-Deja REFLEXIÓN DEVOCIONAL, APLICACIÓN PERSONAL y ORACIÓN FINAL como encabezados en línea separada.
-No cambies los nombres de las secciones.
-`;
-  }
-
-  if (tipoFinal === "estudio") {
-    return `
-Actúa como un maestro bíblico con claridad doctrinal, enfoque pastoral y capacidad para enseñar de forma sencilla.
-
-Debes desarrollar un estudio bíblico claro, formativo y útil para enseñar.
-
-Tema del estudio:
-${temaFinal}
-
-Contexto o público:
-${contextoFinal}
-
-Tono:
-${tonoFinal}
-
-Texto bíblico base:
-${textoBaseFinal}
-
-INSTRUCCIONES IMPORTANTES
-
-Escribe en TEXTO LIMPIO.
-No uses Markdown.
-No uses símbolos como ###, ##, **, *, ni ---.
-No escribas como un comentario académico demasiado técnico.
-Escribe como un estudio bíblico claro y formativo.
-
-El estudio debe ser:
-bíblico
-cristocéntrico
-claro
-formativo
-pastoral
-práctico
-
-USA EXACTAMENTE ESTE FORMATO:
-
-TITULO: ...
-OBJETIVO DEL ESTUDIO: ...
-PASAJE BASE: ...
-
-CONTEXTO BÍBLICO:
-...
-
-EXPLICACIÓN DEL TEXTO:
-1. ...
-2. ...
-3. ...
-
-VERDADES PRINCIPALES:
-1. ...
-2. ...
-3. ...
-
-APLICACIÓN PRÁCTICA:
-1. ...
-2. ...
-3. ...
-
-PREGUNTAS PARA PROFUNDIZAR:
-1. ...
-2. ...
-3. ...
-4. ...
-5. ...
-
-CIERRE:
-...
-`;
-  }
-
-  return `
-Actúa como un maestro bíblico pastoral, cristocéntrico y claro.
 
 Tema:
 ${temaFinal}
@@ -675,8 +354,150 @@ ${tonoFinal}
 Texto bíblico base:
 ${textoBaseFinal}
 
-Desarrolla un contenido bíblico claro, útil y edificante.
+Devuelve exactamente este formato:
+
+{
+  "tipo": "sermon",
+  "titulo": "string",
+  "objetivo": "string",
+  "texto_biblico_base": "string",
+  "idea_central": "string",
+  "introduccion": "string",
+  "contexto_biblico": "string",
+  "desarrollo": ["string", "string", "string"],
+  "aplicacion_practica": ["string", "string", "string"],
+  "conclusion": "string",
+  "llamado_final": "string"
+}
+
+REGLAS:
+- "desarrollo" debe tener exactamente 3 elementos.
+- "aplicacion_practica" debe tener exactamente 3 elementos.
+- Todo en español.
+- Debe ser bíblico, cristocéntrico, pastoral y predicable.
 `;
+  }
+
+  if (tipoFinal === "devocional") {
+    return `
+Responde ÚNICAMENTE con JSON válido.
+No uses markdown.
+No agregues comentarios.
+No agregues texto fuera del JSON.
+
+Eres un pastor que escribe devocionales bíblicos, cálidos, cristocéntricos y edificantes.
+
+Debes escribir un devocional claro, profundo y práctico.
+
+Tema:
+${temaFinal}
+
+Contexto:
+${contextoFinal}
+
+Tono:
+${tonoFinal}
+
+Texto bíblico base:
+${textoBaseFinal}
+
+Devuelve exactamente este formato:
+
+{
+  "tipo": "devocional",
+  "titulo": "string",
+  "texto_biblico_clave": "string",
+  "verdad_central": "string",
+  "reflexion_devocional": "string",
+  "aplicacion_personal": ["string", "string", "string"],
+  "oracion_final": "string"
+}
+
+REGLAS:
+- "aplicacion_personal" debe tener exactamente 3 elementos.
+- Todo en español.
+- Debe ser bíblico, cálido, pastoral, cristocéntrico y práctico.
+`;
+  }
+
+  if (tipoFinal === "estudio") {
+    return `
+Responde ÚNICAMENTE con JSON válido.
+No uses markdown.
+No agregues comentarios.
+No agregues texto fuera del JSON.
+
+Eres un maestro bíblico con claridad doctrinal, enfoque pastoral y capacidad para enseñar de forma sencilla.
+
+Debes desarrollar un estudio bíblico claro, formativo y útil para enseñar.
+
+Tema:
+${temaFinal}
+
+Contexto:
+${contextoFinal}
+
+Tono:
+${tonoFinal}
+
+Texto bíblico base:
+${textoBaseFinal}
+
+Devuelve exactamente este formato:
+
+{
+  "tipo": "estudio",
+  "titulo": "string",
+  "objetivo_del_estudio": "string",
+  "pasaje_base": "string",
+  "contexto_biblico": "string",
+  "explicacion_texto": ["string", "string", "string"],
+  "verdades_principales": ["string", "string", "string"],
+  "aplicacion_practica": ["string", "string", "string"],
+  "preguntas_para_profundizar": ["string", "string", "string", "string", "string"],
+  "cierre": "string"
+}
+
+REGLAS:
+- "explicacion_texto" debe tener exactamente 3 elementos.
+- "verdades_principales" debe tener exactamente 3 elementos.
+- "aplicacion_practica" debe tener exactamente 3 elementos.
+- "preguntas_para_profundizar" debe tener exactamente 5 elementos.
+- Todo en español.
+- Debe ser claro, bíblico, cristocéntrico y formativo.
+`;
+  }
+
+  return `
+Responde ÚNICAMENTE con JSON válido.
+No uses markdown.
+No agregues comentarios.
+No agregues texto fuera del JSON.
+
+{
+  "tipo": "contenido",
+  "titulo": "string",
+  "contenido": "string"
+}
+`;
+}
+
+function tryParseJSON(text) {
+  try {
+    return JSON.parse(text);
+  } catch (e) {
+    const cleaned = text
+      .replace(/^```json\s*/i, "")
+      .replace(/^```\s*/i, "")
+      .replace(/\s*```$/i, "")
+      .trim();
+
+    try {
+      return JSON.parse(cleaned);
+    } catch (err) {
+      return null;
+    }
+  }
 }
 
 export default async function handler(req, res) {
@@ -705,29 +526,24 @@ export default async function handler(req, res) {
       tono,
       textoBase,
       modoGeneracion,
-      cantidadSerie,
-      prompt
+      cantidadSerie
     } = req.body || {};
 
-    let promptFinal = "";
-
-    if (tema && tipoContenido && tono) {
-      promptFinal = construirPrompt({
-        tema,
-        tipoContenido,
-        contexto,
-        tono,
-        textoBase,
-        modoGeneracion,
-        cantidadSerie
-      });
-    } else if (prompt) {
-      promptFinal = prompt;
-    } else {
+    if (!tema || !tipoContenido || !tono) {
       return res.status(400).json({
-        error: "Faltan datos. Envía tema, tipoContenido, tono y opcionalmente contexto, textoBase, modoGeneracion y cantidadSerie."
+        error: "Faltan datos. Envía tema, tipoContenido y tono."
       });
     }
+
+    const promptFinal = getSchemaAndPrompt({
+      tema,
+      tipoContenido,
+      contexto,
+      tono,
+      textoBase,
+      modoGeneracion,
+      cantidadSerie
+    });
 
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
@@ -740,12 +556,13 @@ export default async function handler(req, res) {
         contents: [
           {
             parts: [
-              {
-                text: promptFinal
-              }
+              { text: promptFinal }
             ]
           }
-        ]
+        ],
+        generationConfig: {
+          responseMimeType: "application/json"
+        }
       })
     });
 
@@ -777,7 +594,19 @@ export default async function handler(req, res) {
       });
     }
 
-    return res.status(200).json({ text });
+    const parsed = tryParseJSON(text);
+
+    if (!parsed) {
+      return res.status(500).json({
+        error: "Gemini devolvió texto, pero no JSON válido.",
+        raw: text
+      });
+    }
+
+    return res.status(200).json({
+      mode: "json",
+      data: parsed
+    });
   } catch (e) {
     return res.status(500).json({
       error: "Error interno en /api/generate",
