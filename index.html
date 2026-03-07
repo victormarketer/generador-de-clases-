@@ -456,6 +456,7 @@
       <div class="actions">
         <button class="btn-secondary" onclick="copiar()">Copiar</button>
         <button class="btn-secondary" onclick="descargarTXT()">Descargar TXT</button>
+        <button class="btn-secondary" onclick="exportarWord()">Exportar a Word</button>
         <button class="btn-secondary" onclick="compartirContenido()">Compartir</button>
         <button class="btn-secondary" onclick="enviarWhatsApp()">WhatsApp</button>
         <button class="btn-secondary" onclick="nuevaClase()">Nuevo contenido</button>
@@ -729,8 +730,8 @@
       }
 
       if (data.mode === "json" && data.data) {
-        resultado.value = JSON.stringify(data.data, null, 2);
         vista.innerHTML = renderJsonContent(data.data);
+        resultado.value = jsonToPlainText(data.data);
       } else {
         const texto = data.text || "No llegó texto desde Gemini.";
         resultado.value = texto;
@@ -754,37 +755,14 @@
       return "<p>No se pudo renderizar el contenido.</p>";
     }
 
-    if (data.tipo === "devocional") {
-      return renderDevocional(data);
-    }
-
-    if (data.tipo === "serie_devocional") {
-      return renderSerieDevocional(data);
-    }
-
-    if (data.tipo === "clase") {
-      return renderClase(data);
-    }
-
-    if (data.tipo === "serie_clase") {
-      return renderSerieClase(data);
-    }
-
-    if (data.tipo === "sermon") {
-      return renderSermon(data);
-    }
-
-    if (data.tipo === "serie_sermon") {
-      return renderSerieSermon(data);
-    }
-
-    if (data.tipo === "estudio") {
-      return renderEstudio(data);
-    }
-
-    if (data.tipo === "serie_estudio") {
-      return renderSerieEstudio(data);
-    }
+    if (data.tipo === "devocional") return renderDevocional(data);
+    if (data.tipo === "serie_devocional") return renderSerieDevocional(data);
+    if (data.tipo === "clase") return renderClase(data);
+    if (data.tipo === "serie_clase") return renderSerieClase(data);
+    if (data.tipo === "sermon") return renderSermon(data);
+    if (data.tipo === "serie_sermon") return renderSerieSermon(data);
+    if (data.tipo === "estudio") return renderEstudio(data);
+    if (data.tipo === "serie_estudio") return renderSerieEstudio(data);
 
     return `
       <span class="json-label">JSON renderizado</span>
@@ -796,7 +774,7 @@
     return `
       <div class="highlight-box">
         <h2>${escapeHtml(data.titulo || "")}</h2>
-        <p><strong>Texto bíblico clave:</strong> ${escapeHtml(data.texto_biblico_clave || "")}</p>
+        <p><strong>Texto bíblico clave:</strong> ${escapeHtml(formatReference(data.texto_biblico_clave || ""))}</p>
         <p><strong>Verdad central:</strong> ${escapeHtml(data.verdad_central || "")}</p>
       </div>
 
@@ -829,7 +807,7 @@
         <div class="series-day">
           <h2>DÍA ${escapeHtml(String(dia.dia || ""))}</h2>
           <h3>${escapeHtml(dia.titulo || "")}</h3>
-          <p><strong>Texto bíblico clave:</strong> ${escapeHtml(dia.texto_biblico_clave || "")}</p>
+          <p><strong>Texto bíblico clave:</strong> ${escapeHtml(formatReference(dia.texto_biblico_clave || ""))}</p>
           <p><strong>Verdad central:</strong> ${escapeHtml(dia.verdad_central || "")}</p>
 
           <div class="section-box">
@@ -856,7 +834,7 @@
       <div class="highlight-box">
         <h2>${escapeHtml(data.titulo || "")}</h2>
         <p><strong>Objetivo de la clase:</strong> ${escapeHtml(data.objetivo || "")}</p>
-        <p><strong>Texto bíblico base:</strong> ${escapeHtml(data.texto_biblico_base || "")}</p>
+        <p><strong>Texto bíblico base:</strong> ${escapeHtml(formatReference(data.texto_biblico_base || ""))}</p>
         <p><strong>Idea central:</strong> ${escapeHtml(data.idea_central || "")}</p>
       </div>
 
@@ -919,7 +897,7 @@
       <div class="highlight-box">
         <h2>${escapeHtml(data.titulo || "")}</h2>
         <p><strong>Objetivo del sermón:</strong> ${escapeHtml(data.objetivo || "")}</p>
-        <p><strong>Texto bíblico base:</strong> ${escapeHtml(data.texto_biblico_base || "")}</p>
+        <p><strong>Texto bíblico base:</strong> ${escapeHtml(formatReference(data.texto_biblico_base || ""))}</p>
         <p><strong>Idea central:</strong> ${escapeHtml(data.idea_central || "")}</p>
       </div>
 
@@ -977,7 +955,7 @@
       <div class="highlight-box">
         <h2>${escapeHtml(data.titulo || "")}</h2>
         <p><strong>Objetivo del estudio:</strong> ${escapeHtml(data.objetivo_del_estudio || "")}</p>
-        <p><strong>Pasaje base:</strong> ${escapeHtml(data.pasaje_base || "")}</p>
+        <p><strong>Pasaje base:</strong> ${escapeHtml(formatReference(data.pasaje_base || ""))}</p>
       </div>
 
       <div class="section-box">
@@ -1039,6 +1017,13 @@
 
   function nl2br(text){
     return escapeHtml(text || "").replace(/\n/g, "<br>");
+  }
+
+  function formatReference(text) {
+    if (!text) return "";
+    return text
+      .toLowerCase()
+      .replace(/\b\w/g, l => l.toUpperCase());
   }
 
   function renderPremium(raw){
@@ -1123,6 +1108,190 @@
     return (text || "").replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
   }
 
+  function jsonToPlainText(data){
+    if(!data || typeof data !== "object") return "";
+
+    if(data.tipo === "devocional"){
+      let txt = "";
+      txt += "TITULO\n";
+      txt += (data.titulo || "") + "\n\n";
+
+      txt += "TEXTO BÍBLICO CLAVE\n";
+      txt += formatReference(data.texto_biblico_clave || "") + "\n\n";
+
+      txt += "VERDAD CENTRAL\n";
+      txt += (data.verdad_central || "") + "\n\n";
+
+      txt += "REFLEXIÓN DEVOCIONAL\n";
+      txt += (data.reflexion_devocional || "") + "\n\n";
+
+      txt += "APLICACIÓN PERSONAL\n";
+      (data.aplicacion_personal || []).forEach((item, i) => {
+        txt += (i + 1) + ". " + item + "\n";
+      });
+
+      txt += "\nORACIÓN FINAL\n";
+      txt += (data.oracion_final || "");
+      return txt;
+    }
+
+    if(data.tipo === "serie_devocional"){
+      let txt = "";
+      txt += "TITULO GENERAL DE LA SERIE\n";
+      txt += (data.titulo_serie || "") + "\n\n";
+
+      txt += "OBJETIVO GENERAL\n";
+      txt += (data.objetivo_general || "") + "\n\n";
+
+      txt += "IDEA CENTRAL DE LA SERIE\n";
+      txt += (data.idea_central || "") + "\n\n";
+
+      (data.dias || []).forEach(dia => {
+        txt += "DÍA " + (dia.dia || "") + "\n\n";
+        txt += "TITULO\n" + (dia.titulo || "") + "\n\n";
+        txt += "TEXTO BÍBLICO CLAVE\n" + formatReference(dia.texto_biblico_clave || "") + "\n\n";
+        txt += "VERDAD CENTRAL\n" + (dia.verdad_central || "") + "\n\n";
+        txt += "REFLEXIÓN DEVOCIONAL\n" + (dia.reflexion_devocional || "") + "\n\n";
+        txt += "APLICACIÓN PERSONAL\n";
+        (dia.aplicacion_personal || []).forEach((item, i) => {
+          txt += (i + 1) + ". " + item + "\n";
+        });
+        txt += "\nORACIÓN FINAL\n" + (dia.oracion_final || "") + "\n\n";
+      });
+
+      return txt.trim();
+    }
+
+    if(data.tipo === "clase"){
+      let txt = "";
+      txt += "TITULO\n" + (data.titulo || "") + "\n\n";
+      txt += "OBJETIVO DE LA CLASE\n" + (data.objetivo || "") + "\n\n";
+      txt += "TEXTO BÍBLICO BASE\n" + formatReference(data.texto_biblico_base || "") + "\n\n";
+      txt += "IDEA CENTRAL\n" + (data.idea_central || "") + "\n\n";
+      txt += "DINÁMICA DE APERTURA\n" + (data.dinamica_apertura || "") + "\n\n";
+      txt += "INTRODUCCIÓN\n" + (data.introduccion || "") + "\n\n";
+
+      txt += "DESARROLLO BÍBLICO\n";
+      (data.desarrollo_biblico || []).forEach((item, i) => {
+        txt += (i + 1) + ". " + item + "\n";
+      });
+
+      txt += "\nAPLICACIÓN PRÁCTICA\n";
+      (data.aplicacion_practica || []).forEach((item, i) => {
+        txt += (i + 1) + ". " + item + "\n";
+      });
+
+      txt += "\nDESAFÍO DE LA SEMANA\n" + (data.desafio_semana || "") + "\n\n";
+
+      txt += "PREGUNTAS PARA EL GRUPO\n";
+      (data.preguntas_grupo || []).forEach((item, i) => {
+        txt += (i + 1) + ". " + item + "\n";
+      });
+
+      txt += "\nORACIÓN FINAL\n" + (data.oracion_final || "");
+      return txt;
+    }
+
+    if(data.tipo === "serie_clase"){
+      let txt = "";
+      txt += "TITULO GENERAL DE LA SERIE\n" + (data.titulo_serie || "") + "\n\n";
+      txt += "OBJETIVO GENERAL DE LA SERIE\n" + (data.objetivo_general || "") + "\n\n";
+      txt += "IDEA CENTRAL DE LA SERIE\n" + (data.idea_central || "") + "\n\n";
+
+      (data.semanas || []).forEach(semana => {
+        txt += "SEMANA " + (semana.semana || "") + "\n\n";
+        txt += jsonToPlainText({ ...semana, tipo: "clase" }) + "\n\n";
+      });
+
+      return txt.trim();
+    }
+
+    if(data.tipo === "sermon"){
+      let txt = "";
+      txt += "TITULO\n" + (data.titulo || "") + "\n\n";
+      txt += "OBJETIVO DEL SERMÓN\n" + (data.objetivo || "") + "\n\n";
+      txt += "TEXTO BÍBLICO BASE\n" + formatReference(data.texto_biblico_base || "") + "\n\n";
+      txt += "IDEA CENTRAL\n" + (data.idea_central || "") + "\n\n";
+      txt += "INTRODUCCIÓN\n" + (data.introduccion || "") + "\n\n";
+      txt += "CONTEXTO BÍBLICO\n" + (data.contexto_biblico || "") + "\n\n";
+
+      txt += "DESARROLLO\n";
+      (data.desarrollo || []).forEach((item, i) => {
+        txt += (i + 1) + ". " + item + "\n";
+      });
+
+      txt += "\nAPLICACIÓN PRÁCTICA\n";
+      (data.aplicacion_practica || []).forEach((item, i) => {
+        txt += (i + 1) + ". " + item + "\n";
+      });
+
+      txt += "\nCONCLUSIÓN\n" + (data.conclusion || "") + "\n\n";
+      txt += "LLAMADO FINAL\n" + (data.llamado_final || "");
+      return txt;
+    }
+
+    if(data.tipo === "serie_sermon"){
+      let txt = "";
+      txt += "TITULO GENERAL DE LA SERIE\n" + (data.titulo_serie || "") + "\n\n";
+      txt += "OBJETIVO GENERAL DE LA SERIE\n" + (data.objetivo_general || "") + "\n\n";
+      txt += "IDEA CENTRAL DE LA SERIE\n" + (data.idea_central || "") + "\n\n";
+
+      (data.semanas || []).forEach(semana => {
+        txt += "SEMANA " + (semana.semana || "") + "\n\n";
+        txt += jsonToPlainText({ ...semana, tipo: "sermon" }) + "\n\n";
+      });
+
+      return txt.trim();
+    }
+
+    if(data.tipo === "estudio"){
+      let txt = "";
+      txt += "TITULO\n" + (data.titulo || "") + "\n\n";
+      txt += "OBJETIVO DEL ESTUDIO\n" + (data.objetivo_del_estudio || "") + "\n\n";
+      txt += "PASAJE BASE\n" + formatReference(data.pasaje_base || "") + "\n\n";
+      txt += "CONTEXTO BÍBLICO\n" + (data.contexto_biblico || "") + "\n\n";
+
+      txt += "EXPLICACIÓN DEL TEXTO\n";
+      (data.explicacion_texto || []).forEach((item, i) => {
+        txt += (i + 1) + ". " + item + "\n";
+      });
+
+      txt += "\nVERDADES PRINCIPALES\n";
+      (data.verdades_principales || []).forEach((item, i) => {
+        txt += (i + 1) + ". " + item + "\n";
+      });
+
+      txt += "\nAPLICACIÓN PRÁCTICA\n";
+      (data.aplicacion_practica || []).forEach((item, i) => {
+        txt += (i + 1) + ". " + item + "\n";
+      });
+
+      txt += "\nPREGUNTAS PARA PROFUNDIZAR\n";
+      (data.preguntas_para_profundizar || []).forEach((item, i) => {
+        txt += (i + 1) + ". " + item + "\n";
+      });
+
+      txt += "\nCIERRE\n" + (data.cierre || "");
+      return txt;
+    }
+
+    if(data.tipo === "serie_estudio"){
+      let txt = "";
+      txt += "TITULO GENERAL DE LA SERIE\n" + (data.titulo_serie || "") + "\n\n";
+      txt += "OBJETIVO GENERAL DE LA SERIE\n" + (data.objetivo_general || "") + "\n\n";
+      txt += "IDEA CENTRAL DE LA SERIE\n" + (data.idea_central || "") + "\n\n";
+
+      (data.semanas || []).forEach(semana => {
+        txt += "SEMANA " + (semana.semana || "") + "\n\n";
+        txt += jsonToPlainText({ ...semana, tipo: "estudio" }) + "\n\n";
+      });
+
+      return txt.trim();
+    }
+
+    return JSON.stringify(data, null, 2);
+  }
+
   function copiar(){
     const texto = document.getElementById("resultado").value || "";
     if(!texto.trim()){
@@ -1175,6 +1344,57 @@
     const a = document.createElement("a");
     a.href = url;
     a.download = `${tema}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  function exportarWord() {
+    const contenido = document.getElementById("resultado").value || "";
+    if (!contenido.trim()) {
+      alert("Primero genera un contenido para exportarlo.");
+      return;
+    }
+
+    const tipoContenido = document.getElementById("tipoContenido").value;
+    const modoGeneracion = document.getElementById("modoGeneracion").value;
+    const nombreBase = getNombreContenido(tipoContenido).toLowerCase().replace(/\s+/g, "-");
+    const prefijo = modoGeneracion === "serie" ? "serie-" : "";
+    const tema = (document.getElementById("tema").value || (prefijo + nombreBase))
+      .trim()
+      .replace(/[^\w\-]+/g, "_");
+
+    const htmlWord = `
+      <html xmlns:o="urn:schemas-microsoft-com:office:office"
+            xmlns:w="urn:schemas-microsoft-com:office:word"
+            xmlns="http://www.w3.org/TR/REC-html40">
+      <head>
+        <meta charset="utf-8">
+        <title>${escapeHtml(tema)}</title>
+        <style>
+          body { font-family: Arial, sans-serif; line-height: 1.6; color: #111; }
+          h1, h2, h3 { color: #111; }
+          p { margin: 0 0 10px; }
+          .block { margin-bottom: 14px; }
+          pre { white-space: pre-wrap; font-family: Arial, sans-serif; }
+        </style>
+      </head>
+      <body>
+        <pre>${escapeHtml(contenido)}</pre>
+      </body>
+      </html>
+    `;
+
+    const blob = new Blob(
+      ['\ufeff', htmlWord],
+      { type: 'application/msword' }
+    );
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${tema}.doc`;
     document.body.appendChild(a);
     a.click();
     a.remove();
