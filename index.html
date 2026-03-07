@@ -299,10 +299,41 @@
     font-size:14px;
   }
 
+  .section-box{
+    margin: 14px 0;
+    padding: 14px;
+    border: 1px solid rgba(255,255,255,.10);
+    border-radius: 14px;
+    background: rgba(255,255,255,.03);
+  }
+
+  .highlight-box{
+    margin: 14px 0;
+    padding: 14px;
+    border-left: 4px solid rgba(34,197,94,.75);
+    border-radius: 12px;
+    background: rgba(34,197,94,.08);
+  }
+
+  .series-day{
+    margin: 18px 0;
+    padding: 16px;
+    border: 1px solid rgba(255,255,255,.10);
+    border-radius: 16px;
+    background: rgba(255,255,255,.03);
+  }
+
   .small{
     color:var(--muted);
     font-size:12px;
     margin-top:8px;
+  }
+
+  .json-label{
+    display:inline-block;
+    margin-bottom:8px;
+    font-size:12px;
+    color:var(--muted);
   }
 </style>
 </head>
@@ -416,7 +447,7 @@
 
       <div class="tabs">
         <button id="tabPremium" class="tab active" onclick="setTab('premium')">Vista premium</button>
-        <button id="tabTexto" class="tab" onclick="setTab('texto')">Texto</button>
+        <button id="tabTexto" class="tab" onclick="setTab('texto')">Texto / JSON</button>
       </div>
 
       <div id="vista" class="card"></div>
@@ -697,9 +728,14 @@
         return;
       }
 
-      const texto = data.text || "No llegó texto desde Gemini.";
-      resultado.value = texto;
-      vista.innerHTML = renderPremium(texto);
+      if (data.mode === "json" && data.data) {
+        resultado.value = JSON.stringify(data.data, null, 2);
+        vista.innerHTML = renderJsonContent(data.data);
+      } else {
+        const texto = data.text || "No llegó texto desde Gemini.";
+        resultado.value = texto;
+        vista.innerHTML = renderPremium(texto);
+      }
 
       estado.textContent = modoGeneracion === "serie"
         ? `Serie generada correctamente ✅`
@@ -711,6 +747,298 @@
       vista.innerHTML = "<p><strong>Error de conexión:</strong> " + escapeHtml(e.message) + "</p>";
       estado.textContent = "Error de conexión.";
     }
+  }
+
+  function renderJsonContent(data){
+    if (!data || typeof data !== "object") {
+      return "<p>No se pudo renderizar el contenido.</p>";
+    }
+
+    if (data.tipo === "devocional") {
+      return renderDevocional(data);
+    }
+
+    if (data.tipo === "serie_devocional") {
+      return renderSerieDevocional(data);
+    }
+
+    if (data.tipo === "clase") {
+      return renderClase(data);
+    }
+
+    if (data.tipo === "serie_clase") {
+      return renderSerieClase(data);
+    }
+
+    if (data.tipo === "sermon") {
+      return renderSermon(data);
+    }
+
+    if (data.tipo === "serie_sermon") {
+      return renderSerieSermon(data);
+    }
+
+    if (data.tipo === "estudio") {
+      return renderEstudio(data);
+    }
+
+    if (data.tipo === "serie_estudio") {
+      return renderSerieEstudio(data);
+    }
+
+    return `
+      <span class="json-label">JSON renderizado</span>
+      <pre style="white-space:pre-wrap;">${escapeHtml(JSON.stringify(data, null, 2))}</pre>
+    `;
+  }
+
+  function renderDevocional(data){
+    return `
+      <div class="highlight-box">
+        <h2>${escapeHtml(data.titulo || "")}</h2>
+        <p><strong>Texto bíblico clave:</strong> ${escapeHtml(data.texto_biblico_clave || "")}</p>
+        <p><strong>Verdad central:</strong> ${escapeHtml(data.verdad_central || "")}</p>
+      </div>
+
+      <div class="section-box">
+        <h3>Reflexión devocional</h3>
+        <p>${nl2br(data.reflexion_devocional || "")}</p>
+      </div>
+
+      <div class="section-box">
+        <h3>Aplicación personal</h3>
+        ${renderList(data.aplicacion_personal)}
+      </div>
+
+      <div class="section-box">
+        <h3>Oración final</h3>
+        <p>${nl2br(data.oracion_final || "")}</p>
+      </div>
+    `;
+  }
+
+  function renderSerieDevocional(data){
+    return `
+      <div class="highlight-box">
+        <h2>${escapeHtml(data.titulo_serie || "")}</h2>
+        <p><strong>Objetivo general:</strong> ${escapeHtml(data.objetivo_general || "")}</p>
+        <p><strong>Idea central:</strong> ${escapeHtml(data.idea_central || "")}</p>
+      </div>
+
+      ${(data.dias || []).map(dia => `
+        <div class="series-day">
+          <h2>DÍA ${escapeHtml(String(dia.dia || ""))}</h2>
+          <h3>${escapeHtml(dia.titulo || "")}</h3>
+          <p><strong>Texto bíblico clave:</strong> ${escapeHtml(dia.texto_biblico_clave || "")}</p>
+          <p><strong>Verdad central:</strong> ${escapeHtml(dia.verdad_central || "")}</p>
+
+          <div class="section-box">
+            <h3>Reflexión devocional</h3>
+            <p>${nl2br(dia.reflexion_devocional || "")}</p>
+          </div>
+
+          <div class="section-box">
+            <h3>Aplicación personal</h3>
+            ${renderList(dia.aplicacion_personal)}
+          </div>
+
+          <div class="section-box">
+            <h3>Oración final</h3>
+            <p>${nl2br(dia.oracion_final || "")}</p>
+          </div>
+        </div>
+      `).join("")}
+    `;
+  }
+
+  function renderClase(data){
+    return `
+      <div class="highlight-box">
+        <h2>${escapeHtml(data.titulo || "")}</h2>
+        <p><strong>Objetivo de la clase:</strong> ${escapeHtml(data.objetivo || "")}</p>
+        <p><strong>Texto bíblico base:</strong> ${escapeHtml(data.texto_biblico_base || "")}</p>
+        <p><strong>Idea central:</strong> ${escapeHtml(data.idea_central || "")}</p>
+      </div>
+
+      <div class="section-box">
+        <h3>Dinámica de apertura</h3>
+        <p>${nl2br(data.dinamica_apertura || "")}</p>
+      </div>
+
+      <div class="section-box">
+        <h3>Introducción</h3>
+        <p>${nl2br(data.introduccion || "")}</p>
+      </div>
+
+      <div class="section-box">
+        <h3>Desarrollo bíblico</h3>
+        ${renderList(data.desarrollo_biblico)}
+      </div>
+
+      <div class="section-box">
+        <h3>Aplicación práctica</h3>
+        ${renderList(data.aplicacion_practica)}
+      </div>
+
+      <div class="section-box">
+        <h3>Desafío de la semana</h3>
+        <p>${nl2br(data.desafio_semana || "")}</p>
+      </div>
+
+      <div class="section-box">
+        <h3>Preguntas para el grupo</h3>
+        ${renderList(data.preguntas_grupo)}
+      </div>
+
+      <div class="section-box">
+        <h3>Oración final</h3>
+        <p>${nl2br(data.oracion_final || "")}</p>
+      </div>
+    `;
+  }
+
+  function renderSerieClase(data){
+    return `
+      <div class="highlight-box">
+        <h2>${escapeHtml(data.titulo_serie || "")}</h2>
+        <p><strong>Objetivo general de la serie:</strong> ${escapeHtml(data.objetivo_general || "")}</p>
+        <p><strong>Idea central de la serie:</strong> ${escapeHtml(data.idea_central || "")}</p>
+      </div>
+
+      ${(data.semanas || []).map(semana => `
+        <div class="series-day">
+          <h2>SEMANA ${escapeHtml(String(semana.semana || ""))}</h2>
+          ${renderClase(semana)}
+        </div>
+      `).join("")}
+    `;
+  }
+
+  function renderSermon(data){
+    return `
+      <div class="highlight-box">
+        <h2>${escapeHtml(data.titulo || "")}</h2>
+        <p><strong>Objetivo del sermón:</strong> ${escapeHtml(data.objetivo || "")}</p>
+        <p><strong>Texto bíblico base:</strong> ${escapeHtml(data.texto_biblico_base || "")}</p>
+        <p><strong>Idea central:</strong> ${escapeHtml(data.idea_central || "")}</p>
+      </div>
+
+      <div class="section-box">
+        <h3>Introducción</h3>
+        <p>${nl2br(data.introduccion || "")}</p>
+      </div>
+
+      <div class="section-box">
+        <h3>Contexto bíblico</h3>
+        <p>${nl2br(data.contexto_biblico || "")}</p>
+      </div>
+
+      <div class="section-box">
+        <h3>Desarrollo</h3>
+        ${renderList(data.desarrollo)}
+      </div>
+
+      <div class="section-box">
+        <h3>Aplicación práctica</h3>
+        ${renderList(data.aplicacion_practica)}
+      </div>
+
+      <div class="section-box">
+        <h3>Conclusión</h3>
+        <p>${nl2br(data.conclusion || "")}</p>
+      </div>
+
+      <div class="section-box">
+        <h3>Llamado final</h3>
+        <p>${nl2br(data.llamado_final || "")}</p>
+      </div>
+    `;
+  }
+
+  function renderSerieSermon(data){
+    return `
+      <div class="highlight-box">
+        <h2>${escapeHtml(data.titulo_serie || "")}</h2>
+        <p><strong>Objetivo general de la serie:</strong> ${escapeHtml(data.objetivo_general || "")}</p>
+        <p><strong>Idea central de la serie:</strong> ${escapeHtml(data.idea_central || "")}</p>
+      </div>
+
+      ${(data.semanas || []).map(semana => `
+        <div class="series-day">
+          <h2>SEMANA ${escapeHtml(String(semana.semana || ""))}</h2>
+          ${renderSermon(semana)}
+        </div>
+      `).join("")}
+    `;
+  }
+
+  function renderEstudio(data){
+    return `
+      <div class="highlight-box">
+        <h2>${escapeHtml(data.titulo || "")}</h2>
+        <p><strong>Objetivo del estudio:</strong> ${escapeHtml(data.objetivo_del_estudio || "")}</p>
+        <p><strong>Pasaje base:</strong> ${escapeHtml(data.pasaje_base || "")}</p>
+      </div>
+
+      <div class="section-box">
+        <h3>Contexto bíblico</h3>
+        <p>${nl2br(data.contexto_biblico || "")}</p>
+      </div>
+
+      <div class="section-box">
+        <h3>Explicación del texto</h3>
+        ${renderList(data.explicacion_texto)}
+      </div>
+
+      <div class="section-box">
+        <h3>Verdades principales</h3>
+        ${renderList(data.verdades_principales)}
+      </div>
+
+      <div class="section-box">
+        <h3>Aplicación práctica</h3>
+        ${renderList(data.aplicacion_practica)}
+      </div>
+
+      <div class="section-box">
+        <h3>Preguntas para profundizar</h3>
+        ${renderList(data.preguntas_para_profundizar)}
+      </div>
+
+      <div class="section-box">
+        <h3>Cierre</h3>
+        <p>${nl2br(data.cierre || "")}</p>
+      </div>
+    `;
+  }
+
+  function renderSerieEstudio(data){
+    return `
+      <div class="highlight-box">
+        <h2>${escapeHtml(data.titulo_serie || "")}</h2>
+        <p><strong>Objetivo general de la serie:</strong> ${escapeHtml(data.objetivo_general || "")}</p>
+        <p><strong>Idea central de la serie:</strong> ${escapeHtml(data.idea_central || "")}</p>
+      </div>
+
+      ${(data.semanas || []).map(semana => `
+        <div class="series-day">
+          <h2>SEMANA ${escapeHtml(String(semana.semana || ""))}</h2>
+          ${renderEstudio(semana)}
+        </div>
+      `).join("")}
+    `;
+  }
+
+  function renderList(items){
+    if (!Array.isArray(items) || items.length === 0) {
+      return "<p>No disponible.</p>";
+    }
+
+    return `<ol>${items.map(item => `<li>${nl2br(item || "")}</li>`).join("")}</ol>`;
+  }
+
+  function nl2br(text){
+    return escapeHtml(text || "").replace(/\n/g, "<br>");
   }
 
   function renderPremium(raw){
