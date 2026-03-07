@@ -1,19 +1,17 @@
-const CACHE_NAME = "recursos-biblicos-v3";
+const CACHE_NAME = "recursos-biblicos-v6";
 
 const URLS_TO_CACHE = [
   "/",
   "/index.html",
   "/manifest.json",
-  "/icon-192.png",
-  "/icon-512.png"
+  "/icons/icon-192.png",
+  "/icons/icon-512.png"
 ];
 
 self.addEventListener("install", (event) => {
   self.skipWaiting();
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(URLS_TO_CACHE);
-    })
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(URLS_TO_CACHE))
   );
 });
 
@@ -36,18 +34,14 @@ self.addEventListener("fetch", (event) => {
 
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
+      if (cachedResponse) return cachedResponse;
 
       return fetch(event.request)
         .then((networkResponse) => {
           const responseClone = networkResponse.clone();
-
           caches.open(CACHE_NAME).then((cache) => {
             cache.put(event.request, responseClone);
           });
-
           return networkResponse;
         })
         .catch(() => caches.match("/index.html"));
