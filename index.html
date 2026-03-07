@@ -1464,8 +1464,31 @@
   actualizarContextoLabel();
   actualizarCantidadSerie();
   checkAuth();
+  let deferredPrompt;
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById("installBox").style.display = "block";
+});
+
+async function instalarApp(){
+  if(!deferredPrompt) return;
+
+  deferredPrompt.prompt();
+
+  const { outcome } = await deferredPrompt.userChoice;
+
+  if(outcome === "accepted"){
+    console.log("App instalada");
+  }
+
+  deferredPrompt = null;
+  document.getElementById("installBox").style.display = "none";
+}
 </script>
 </body>
 </html>
+
 
 
