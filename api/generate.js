@@ -98,33 +98,62 @@ No uses símbolos como ###, ##, **, *, ni ---.
 No escribas como artículo académico.
 Escribe como material pastoral, claro, práctico y fácil de enseñar.
 
-Primero incluye:
+Primero incluye exactamente este formato:
 
 TITULO GENERAL DE LA SERIE
+...
+
 OBJETIVO GENERAL DE LA SERIE
+...
+
 IDEA CENTRAL DE LA SERIE
+...
 
 Luego desarrolla ${cantidadFinal} clases consecutivas.
 
-Cada clase debe incluir obligatoriamente:
+Cada clase debe incluir exactamente este formato:
 
-TITULO
-OBJETIVO DE LA CLASE
-TEXTO BIBLICO BASE
-IDEA CENTRAL
-DINÁMICA DE APERTURA
-INTRODUCCIÓN
-DESARROLLO BÍBLICO EN 3 PUNTOS
-APLICACIÓN PRÁCTICA
-DESAFÍO DE LA SEMANA
-PREGUNTAS PARA EL GRUPO
-ORACIÓN FINAL
+SEMANA 1
+
+TITULO: ...
+OBJETIVO DE LA CLASE: ...
+TEXTO BIBLICO BASE: ...
+IDEA CENTRAL: ...
+
+DINÁMICA DE APERTURA:
+...
+
+INTRODUCCIÓN:
+...
+
+DESARROLLO BÍBLICO:
+1. ...
+2. ...
+3. ...
+
+APLICACIÓN PRÁCTICA:
+1. ...
+2. ...
+3. ...
+
+DESAFÍO DE LA SEMANA:
+...
+
+PREGUNTAS PARA EL GRUPO:
+1. ...
+2. ...
+3. ...
+4. ...
+
+ORACIÓN FINAL:
+...
 
 REGLAS IMPORTANTES
 
 Cada clase debe avanzar de manera lógica sobre la anterior.
 La progresión debe sentirse conectada, pastoral y útil para una serie real.
 Incluye exactamente 4 preguntas para el grupo en cada clase.
+Usa siempre el mismo formato visual en cada semana.
 `;
     }
 
@@ -151,32 +180,56 @@ No uses símbolos como ###, ##, **, *, ni ---.
 No escribas como artículo académico.
 Escribe como material real para predicar.
 
-Primero incluye:
+Primero incluye exactamente este formato:
 
 TITULO GENERAL DE LA SERIE
+...
+
 OBJETIVO GENERAL DE LA SERIE
+...
+
 IDEA CENTRAL DE LA SERIE
+...
 
 Luego desarrolla ${cantidadFinal} sermones.
 
-Cada sermón debe incluir:
+Cada sermón debe incluir exactamente este formato:
 
-TITULO
-OBJETIVO DEL SERMÓN
-TEXTO BÍBLICO BASE
-IDEA CENTRAL
-INTRODUCCIÓN
-CONTEXTO BÍBLICO
-DESARROLLO EN 3 PUNTOS
-APLICACIÓN PRÁCTICA
-CONCLUSIÓN
-LLAMADO FINAL
+SEMANA 1
+
+TITULO: ...
+OBJETIVO DEL SERMÓN: ...
+TEXTO BÍBLICO BASE: ...
+IDEA CENTRAL: ...
+
+INTRODUCCIÓN:
+...
+
+CONTEXTO BÍBLICO:
+...
+
+DESARROLLO:
+1. ...
+2. ...
+3. ...
+
+APLICACIÓN PRÁCTICA:
+1. ...
+2. ...
+3. ...
+
+CONCLUSIÓN:
+...
+
+LLAMADO FINAL:
+...
 
 REGLAS IMPORTANTES
 
 Cada sermón debe avanzar sobre el anterior.
 La serie debe sentirse coherente y progresiva.
 Cada sermón debe ser predicable, pastoral, bíblico y práctico.
+Usa siempre el mismo formato visual en cada semana.
 `;
     }
 
@@ -203,11 +256,16 @@ No uses símbolos como ###, ##, **, *, ni ---.
 No escribas de forma académica.
 Escribe de manera cálida, espiritual, pastoral y clara.
 
-Primero incluye:
+Primero incluye exactamente este formato:
 
 TITULO GENERAL DE LA SERIE
+...
+
 OBJETIVO GENERAL
+...
+
 IDEA CENTRAL DE LA SERIE
+...
 
 Luego desarrolla:
 DÍA 1
@@ -215,20 +273,34 @@ DÍA 2
 DÍA 3
 hasta completar los ${cantidadFinal} días.
 
-Cada día debe incluir:
+CADA DÍA DEBE RESPETAR EXACTAMENTE ESTE FORMATO:
 
-TITULO
-TEXTO BÍBLICO CLAVE
-VERDAD CENTRAL
-REFLEXIÓN DEVOCIONAL
-APLICACIÓN PERSONAL
-ORACIÓN FINAL
+DÍA 1
+
+TITULO: ...
+TEXTO BÍBLICO CLAVE: ...
+VERDAD CENTRAL: ...
+
+REFLEXIÓN DEVOCIONAL:
+...
+
+APLICACIÓN PERSONAL:
+1. ...
+2. ...
+3. ...
+
+ORACIÓN FINAL:
+...
 
 REGLAS IMPORTANTES
 
 Cada día debe tener continuidad con el anterior.
 La serie debe sentirse progresiva y espiritualmente conectada.
 Incluye exactamente 3 aplicaciones personales por día.
+No cambies los nombres de las secciones.
+Usa siempre dos puntos después de TITULO, TEXTO BÍBLICO CLAVE y VERDAD CENTRAL.
+Deja REFLEXIÓN DEVOCIONAL, APLICACIÓN PERSONAL y ORACIÓN FINAL como encabezados en línea separada.
+Usa siempre el mismo formato visual en cada día.
 `;
     }
 
@@ -255,25 +327,54 @@ No uses símbolos como ###, ##, **, *, ni ---.
 No escribas como comentario académico demasiado técnico.
 Escribe como un estudio bíblico claro, pastoral y formativo.
 
-Primero incluye:
+Primero incluye exactamente este formato:
 
 TITULO GENERAL DE LA SERIE
+...
+
 OBJETIVO GENERAL DE LA SERIE
+...
+
 IDEA CENTRAL DE LA SERIE
+...
 
 Luego desarrolla ${cantidadFinal} estudios bíblicos.
 
-Cada estudio debe incluir:
+Cada estudio debe incluir exactamente este formato:
 
-TITULO
-OBJETIVO DEL ESTUDIO
-PASAJE BASE
-CONTEXTO BÍBLICO
-EXPLICACIÓN DEL TEXTO EN 3 PUNTOS
-VERDADES PRINCIPALES
-APLICACIÓN PRÁCTICA
-PREGUNTAS PARA PROFUNDIZAR
-CIERRE
+SEMANA 1
+
+TITULO: ...
+OBJETIVO DEL ESTUDIO: ...
+PASAJE BASE: ...
+
+CONTEXTO BÍBLICO:
+...
+
+EXPLICACIÓN DEL TEXTO:
+1. ...
+2. ...
+3. ...
+
+VERDADES PRINCIPALES:
+1. ...
+2. ...
+3. ...
+
+APLICACIÓN PRÁCTICA:
+1. ...
+2. ...
+3. ...
+
+PREGUNTAS PARA PROFUNDIZAR:
+1. ...
+2. ...
+3. ...
+4. ...
+5. ...
+
+CIERRE:
+...
 
 REGLAS IMPORTANTES
 
@@ -281,6 +382,7 @@ Cada estudio debe construir sobre el anterior.
 Incluye exactamente 3 verdades principales.
 Incluye exactamente 3 aplicaciones prácticas.
 Incluye exactamente 5 preguntas para profundizar.
+Usa siempre el mismo formato visual en cada semana.
 `;
     }
   }
@@ -324,43 +426,40 @@ Mantén las secciones breves, claras y fáciles de explicar.
 
 Antes de escribir la enseñanza, organiza internamente un bosquejo breve y luego desarrolla cada sección con claridad.
 
-ESTRUCTURA OBLIGATORIA
+USA EXACTAMENTE ESTE FORMATO:
 
-TITULO
-Máximo 12 palabras.
+TITULO: ...
+OBJETIVO DE LA CLASE: ...
+TEXTO BIBLICO BASE: ...
+IDEA CENTRAL: ...
 
-OBJETIVO DE LA CLASE
-Explica en una sola frase qué transformación espiritual busca esta enseñanza.
+DINÁMICA DE APERTURA:
+...
 
-TEXTO BIBLICO BASE
-Incluye el pasaje principal y menciona brevemente el contexto bíblico.
+INTRODUCCIÓN:
+...
 
-IDEA CENTRAL
-Resume en una sola frase la verdad principal de la enseñanza.
+DESARROLLO BÍBLICO:
+1. ...
+2. ...
+3. ...
 
-DINÁMICA DE APERTURA
-Propón una dinámica breve y participativa relacionada con el tema y adecuada al público indicado.
+APLICACIÓN PRÁCTICA:
+1. ...
+2. ...
+3. ...
 
-INTRODUCCIÓN
-Un párrafo breve que conecte el tema con la vida diaria de los creyentes.
+DESAFÍO DE LA SEMANA:
+...
 
-DESARROLLO BÍBLICO
-Explica el pasaje bíblico en máximo 3 puntos principales.
-Cada punto debe ser claro, pastoral y fácil de enseñar.
+PREGUNTAS PARA EL GRUPO:
+1. ...
+2. ...
+3. ...
+4. ...
 
-APLICACIÓN PRÁCTICA
-Incluye 3 aplicaciones concretas para vivir esta verdad durante la semana.
-
-DESAFÍO DE LA SEMANA
-Propón un paso práctico que cada persona pueda aplicar durante los próximos días.
-
-PREGUNTAS PARA EL GRUPO
-Incluye exactamente 4 preguntas que ayuden a reflexionar y conversar.
-
-ORACIÓN FINAL
-Escribe una oración pastoral breve basada en el tema de la enseñanza.
-
-La clase debe sentirse pastoral, bíblica, clara y lista para ser enseñada en una célula.
+ORACIÓN FINAL:
+...
 `;
   }
 
@@ -402,38 +501,34 @@ claro
 práctico
 predicable
 
-ESTRUCTURA OBLIGATORIA
+USA EXACTAMENTE ESTE FORMATO:
 
-TITULO
-Máximo 12 palabras.
+TITULO: ...
+OBJETIVO DEL SERMÓN: ...
+TEXTO BÍBLICO BASE: ...
+IDEA CENTRAL: ...
 
-OBJETIVO DEL SERMÓN
-Explica en una sola frase qué debe producir este mensaje en los oyentes.
+INTRODUCCIÓN:
+...
 
-TEXTO BÍBLICO BASE
-Incluye el pasaje principal y menciona brevemente el contexto.
+CONTEXTO BÍBLICO:
+...
 
-IDEA CENTRAL
-Resume en una frase la verdad principal del sermón.
+DESARROLLO:
+1. ...
+2. ...
+3. ...
 
-INTRODUCCIÓN
-Breve, clara y conectada con la vida real.
+APLICACIÓN PRÁCTICA:
+1. ...
+2. ...
+3. ...
 
-CONTEXTO BÍBLICO
-Explica el contexto del pasaje de forma sencilla.
+CONCLUSIÓN:
+...
 
-DESARROLLO
-Desarrolla el sermón en 3 puntos principales.
-Cada punto debe tener explicación y aplicación pastoral.
-
-APLICACIÓN PRÁCTICA
-Incluye 3 aplicaciones concretas.
-
-CONCLUSIÓN
-Cierra con fuerza y claridad.
-
-LLAMADO FINAL
-Haz un llamado pastoral coherente con el tema.
+LLAMADO FINAL:
+...
 `;
   }
 
@@ -470,25 +565,28 @@ pastoral
 edificante
 práctico
 
-ESTRUCTURA OBLIGATORIA
+USA EXACTAMENTE ESTE FORMATO:
 
-TITULO
-Máximo 12 palabras.
+TITULO: ...
+TEXTO BÍBLICO CLAVE: ...
+VERDAD CENTRAL: ...
 
-TEXTO BÍBLICO CLAVE
-Incluye el pasaje principal.
+REFLEXIÓN DEVOCIONAL:
+...
 
-VERDAD CENTRAL
-Resume en una frase la enseñanza principal.
+APLICACIÓN PERSONAL:
+1. ...
+2. ...
+3. ...
 
-REFLEXIÓN DEVOCIONAL
-Desarrolla una reflexión clara y pastoral.
+ORACIÓN FINAL:
+...
 
-APLICACIÓN PERSONAL
-Incluye 3 aplicaciones breves y concretas.
+REGLAS IMPORTANTES
 
-ORACIÓN FINAL
-Escribe una oración sencilla y pastoral basada en el tema.
+Usa siempre dos puntos después de TITULO, TEXTO BÍBLICO CLAVE y VERDAD CENTRAL.
+Deja REFLEXIÓN DEVOCIONAL, APLICACIÓN PERSONAL y ORACIÓN FINAL como encabezados en línea separada.
+No cambies los nombres de las secciones.
 `;
   }
 
@@ -526,34 +624,39 @@ formativo
 pastoral
 práctico
 
-ESTRUCTURA OBLIGATORIA
+USA EXACTAMENTE ESTE FORMATO:
 
-TITULO
-Máximo 12 palabras.
+TITULO: ...
+OBJETIVO DEL ESTUDIO: ...
+PASAJE BASE: ...
 
-OBJETIVO DEL ESTUDIO
-Explica en una sola frase qué busca enseñar este estudio.
+CONTEXTO BÍBLICO:
+...
 
-PASAJE BASE
-Incluye el texto principal.
+EXPLICACIÓN DEL TEXTO:
+1. ...
+2. ...
+3. ...
 
-CONTEXTO BÍBLICO
-Explica el contexto de forma sencilla.
+VERDADES PRINCIPALES:
+1. ...
+2. ...
+3. ...
 
-EXPLICACIÓN DEL TEXTO
-Desarrolla el contenido en 3 puntos principales.
+APLICACIÓN PRÁCTICA:
+1. ...
+2. ...
+3. ...
 
-VERDADES PRINCIPALES
-Resume 3 enseñanzas claves.
+PREGUNTAS PARA PROFUNDIZAR:
+1. ...
+2. ...
+3. ...
+4. ...
+5. ...
 
-APLICACIÓN PRÁCTICA
-Incluye 3 aplicaciones concretas.
-
-PREGUNTAS PARA PROFUNDIZAR
-Incluye exactamente 5 preguntas.
-
-CIERRE
-Escribe un cierre breve y claro.
+CIERRE:
+...
 `;
   }
 
