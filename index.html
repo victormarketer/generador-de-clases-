@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Generador de Recursos Bíblicos</title>
 
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0f172a">
+<link rel="apple-touch-icon" href="/icon-192.png">
+
 <style>
   :root{
     --bg:#0b1220;
@@ -367,6 +371,10 @@
         <button class="btn-secondary" onclick="logout()">Salir</button>
       </div>
 
+      <div class="actions">
+        <button id="installBtn" class="btn-primary hidden" onclick="instalarApp()">Instalar app</button>
+      </div>
+
       <div class="quick-types">
         <button id="quick-celula" class="quick-type active" type="button" onclick="seleccionarTipoContenido('celula')">📖 Clase para célula</button>
         <button id="quick-sermon" class="quick-type" type="button" onclick="seleccionarTipoContenido('sermon')">🎤 Sermón</button>
@@ -468,6 +476,8 @@
   </div>
 
 <script>
+  let deferredPrompt = null;
+
   function setTab(tab){
     const vista = document.getElementById("vista");
     const resultado = document.getElementById("resultado");
@@ -1401,6 +1411,14 @@
     URL.revokeObjectURL(url);
   }
 
+  async function instalarApp() {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    document.getElementById("installBtn").classList.add("hidden");
+  }
+
   function limpiar(){
     document.getElementById("tema").value = "";
     document.getElementById("textoBase").value = "";
@@ -1416,6 +1434,25 @@
       .replaceAll(">","&gt;")
       .replaceAll('"',"&quot;")
       .replaceAll("'","&#039;");
+  }
+
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    document.getElementById("installBtn").classList.remove("hidden");
+  });
+
+  window.addEventListener("appinstalled", () => {
+    deferredPrompt = null;
+    document.getElementById("installBtn").classList.add("hidden");
+  });
+
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("/sw.js").catch((err) => {
+        console.error("Error registrando service worker:", err);
+      });
+    });
   }
 
   actualizarQuickButtons();
