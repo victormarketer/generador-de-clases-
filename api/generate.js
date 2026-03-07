@@ -500,6 +500,174 @@ function tryParseJSON(text) {
   }
 }
 
+function ensureArray(value, length = 0) {
+  const arr = Array.isArray(value) ? value : [];
+  if (length <= 0) return arr;
+  const copy = [...arr];
+  while (copy.length < length) copy.push("");
+  return copy.slice(0, length);
+}
+
+function ensureString(value) {
+  return typeof value === "string" ? value : "";
+}
+
+function normalizeJson(data) {
+  if (!data || typeof data !== "object") {
+    return {
+      tipo: "contenido",
+      titulo: "",
+      contenido: ""
+    };
+  }
+
+  if (data.tipo === "devocional") {
+    return {
+      tipo: "devocional",
+      titulo: ensureString(data.titulo),
+      texto_biblico_clave: ensureString(data.texto_biblico_clave),
+      verdad_central: ensureString(data.verdad_central),
+      reflexion_devocional: ensureString(data.reflexion_devocional),
+      aplicacion_personal: ensureArray(data.aplicacion_personal, 3),
+      oracion_final: ensureString(data.oracion_final)
+    };
+  }
+
+  if (data.tipo === "serie_devocional") {
+    return {
+      tipo: "serie_devocional",
+      titulo_serie: ensureString(data.titulo_serie),
+      objetivo_general: ensureString(data.objetivo_general),
+      idea_central: ensureString(data.idea_central),
+      dias: (Array.isArray(data.dias) ? data.dias : []).map((dia, index) => ({
+        dia: dia?.dia ?? index + 1,
+        titulo: ensureString(dia?.titulo),
+        texto_biblico_clave: ensureString(dia?.texto_biblico_clave),
+        verdad_central: ensureString(dia?.verdad_central),
+        reflexion_devocional: ensureString(dia?.reflexion_devocional),
+        aplicacion_personal: ensureArray(dia?.aplicacion_personal, 3),
+        oracion_final: ensureString(dia?.oracion_final)
+      }))
+    };
+  }
+
+  if (data.tipo === "clase") {
+    return {
+      tipo: "clase",
+      titulo: ensureString(data.titulo),
+      objetivo: ensureString(data.objetivo),
+      texto_biblico_base: ensureString(data.texto_biblico_base),
+      idea_central: ensureString(data.idea_central),
+      dinamica_apertura: ensureString(data.dinamica_apertura),
+      introduccion: ensureString(data.introduccion),
+      desarrollo_biblico: ensureArray(data.desarrollo_biblico, 3),
+      aplicacion_practica: ensureArray(data.aplicacion_practica, 3),
+      desafio_semana: ensureString(data.desafio_semana),
+      preguntas_grupo: ensureArray(data.preguntas_grupo, 4),
+      oracion_final: ensureString(data.oracion_final)
+    };
+  }
+
+  if (data.tipo === "serie_clase") {
+    return {
+      tipo: "serie_clase",
+      titulo_serie: ensureString(data.titulo_serie),
+      objetivo_general: ensureString(data.objetivo_general),
+      idea_central: ensureString(data.idea_central),
+      semanas: (Array.isArray(data.semanas) ? data.semanas : []).map((semana, index) => ({
+        semana: semana?.semana ?? index + 1,
+        titulo: ensureString(semana?.titulo),
+        objetivo: ensureString(semana?.objetivo),
+        texto_biblico_base: ensureString(semana?.texto_biblico_base),
+        idea_central: ensureString(semana?.idea_central),
+        dinamica_apertura: ensureString(semana?.dinamica_apertura),
+        introduccion: ensureString(semana?.introduccion),
+        desarrollo_biblico: ensureArray(semana?.desarrollo_biblico, 3),
+        aplicacion_practica: ensureArray(semana?.aplicacion_practica, 3),
+        desafio_semana: ensureString(semana?.desafio_semana),
+        preguntas_grupo: ensureArray(semana?.preguntas_grupo, 4),
+        oracion_final: ensureString(semana?.oracion_final)
+      }))
+    };
+  }
+
+  if (data.tipo === "sermon") {
+    return {
+      tipo: "sermon",
+      titulo: ensureString(data.titulo),
+      objetivo: ensureString(data.objetivo),
+      texto_biblico_base: ensureString(data.texto_biblico_base),
+      idea_central: ensureString(data.idea_central),
+      introduccion: ensureString(data.introduccion),
+      contexto_biblico: ensureString(data.contexto_biblico),
+      desarrollo: ensureArray(data.desarrollo, 3),
+      aplicacion_practica: ensureArray(data.aplicacion_practica, 3),
+      conclusion: ensureString(data.conclusion),
+      llamado_final: ensureString(data.llamado_final)
+    };
+  }
+
+  if (data.tipo === "serie_sermon") {
+    return {
+      tipo: "serie_sermon",
+      titulo_serie: ensureString(data.titulo_serie),
+      objetivo_general: ensureString(data.objetivo_general),
+      idea_central: ensureString(data.idea_central),
+      semanas: (Array.isArray(data.semanas) ? data.semanas : []).map((semana, index) => ({
+        semana: semana?.semana ?? index + 1,
+        titulo: ensureString(semana?.titulo),
+        objetivo: ensureString(semana?.objetivo),
+        texto_biblico_base: ensureString(semana?.texto_biblico_base),
+        idea_central: ensureString(semana?.idea_central),
+        introduccion: ensureString(semana?.introduccion),
+        contexto_biblico: ensureString(semana?.contexto_biblico),
+        desarrollo: ensureArray(semana?.desarrollo, 3),
+        aplicacion_practica: ensureArray(semana?.aplicacion_practica, 3),
+        conclusion: ensureString(semana?.conclusion),
+        llamado_final: ensureString(semana?.llamado_final)
+      }))
+    };
+  }
+
+  if (data.tipo === "estudio") {
+    return {
+      tipo: "estudio",
+      titulo: ensureString(data.titulo),
+      objetivo_del_estudio: ensureString(data.objetivo_del_estudio),
+      pasaje_base: ensureString(data.pasaje_base),
+      contexto_biblico: ensureString(data.contexto_biblico),
+      explicacion_texto: ensureArray(data.explicacion_texto, 3),
+      verdades_principales: ensureArray(data.verdades_principales, 3),
+      aplicacion_practica: ensureArray(data.aplicacion_practica, 3),
+      preguntas_para_profundizar: ensureArray(data.preguntas_para_profundizar, 5),
+      cierre: ensureString(data.cierre)
+    };
+  }
+
+  if (data.tipo === "serie_estudio") {
+    return {
+      tipo: "serie_estudio",
+      titulo_serie: ensureString(data.titulo_serie),
+      objetivo_general: ensureString(data.objetivo_general),
+      idea_central: ensureString(data.idea_central),
+      semanas: (Array.isArray(data.semanas) ? data.semanas : []).map((semana, index) => ({
+        semana: semana?.semana ?? index + 1,
+        titulo: ensureString(semana?.titulo),
+        objetivo_del_estudio: ensureString(semana?.objetivo_del_estudio),
+        pasaje_base: ensureString(semana?.pasaje_base),
+        contexto_biblico: ensureString(semana?.contexto_biblico),
+        explicacion_texto: ensureArray(semana?.explicacion_texto, 3),
+        verdades_principales: ensureArray(semana?.verdades_principales, 3),
+        aplicacion_practica: ensureArray(semana?.aplicacion_practica, 3),
+        preguntas_para_profundizar: ensureArray(semana?.preguntas_para_profundizar, 5),
+        cierre: ensureString(semana?.cierre)
+      }))
+    };
+  }
+
+  return data;
+}
+
 export default async function handler(req, res) {
   try {
     if (req.method !== "POST") {
@@ -603,9 +771,11 @@ export default async function handler(req, res) {
       });
     }
 
+    const normalized = normalizeJson(parsed);
+
     return res.status(200).json({
       mode: "json",
-      data: parsed
+      data: normalized
     });
   } catch (e) {
     return res.status(500).json({
