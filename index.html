@@ -346,12 +346,13 @@
   <div class="wrap">
     <h1>Generador de Recursos Bíblicos</h1>
     <p class="lead">Prepara clases, sermones, devocionales y estudios bíblicos con una presentación más profesional y compártelos fácilmente.</p>
-<div id="installBox" style="display:none;margin-bottom:20px;">
-  <button onclick="instalarApp()" 
-  style="background:#22c55e;color:white;padding:12px 20px;border:none;border-radius:10px;font-weight:bold;cursor:pointer;">
-  📲 Instalar app en tu celular
-  </button>
-</div>
+
+    <div id="installBox" style="display:none;margin-bottom:20px;">
+      <button onclick="instalarApp()" style="background:#22c55e;color:white;padding:12px 20px;border:none;border-radius:10px;font-weight:bold;cursor:pointer;">
+        📲 Instalar app en tu celular
+      </button>
+    </div>
+
     <div id="loginView" class="panel loginBox">
       <div class="topbar">
         <span class="badge">🔒 Acceso privado</span>
@@ -374,10 +375,6 @@
       <div class="topbar">
         <span class="badge">✅ Acceso concedido</span>
         <button class="btn-secondary" onclick="logout()">Salir</button>
-      </div>
-
-      <div class="actions">
-        <button id="installBtn" class="btn-primary hidden" onclick="instalarApp()">Instalar app</button>
       </div>
 
       <div class="quick-types">
@@ -1418,10 +1415,15 @@
 
   async function instalarApp() {
     if (!deferredPrompt) return;
+
     deferredPrompt.prompt();
     await deferredPrompt.userChoice;
     deferredPrompt = null;
-    document.getElementById("installBtn").classList.add("hidden");
+
+    const installBox = document.getElementById("installBox");
+    if (installBox) {
+      installBox.style.display = "none";
+    }
   }
 
   function limpiar(){
@@ -1444,12 +1446,20 @@
   window.addEventListener("beforeinstallprompt", (e) => {
     e.preventDefault();
     deferredPrompt = e;
-    document.getElementById("installBtn").classList.remove("hidden");
+
+    const installBox = document.getElementById("installBox");
+    if (installBox) {
+      installBox.style.display = "block";
+    }
   });
 
   window.addEventListener("appinstalled", () => {
     deferredPrompt = null;
-    document.getElementById("installBtn").classList.add("hidden");
+
+    const installBox = document.getElementById("installBox");
+    if (installBox) {
+      installBox.style.display = "none";
+    }
   });
 
   if ("serviceWorker" in navigator) {
@@ -1464,31 +1474,6 @@
   actualizarContextoLabel();
   actualizarCantidadSerie();
   checkAuth();
-  let deferredPrompt;
-
-window.addEventListener("beforeinstallprompt", (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  document.getElementById("installBox").style.display = "block";
-});
-
-async function instalarApp(){
-  if(!deferredPrompt) return;
-
-  deferredPrompt.prompt();
-
-  const { outcome } = await deferredPrompt.userChoice;
-
-  if(outcome === "accepted"){
-    console.log("App instalada");
-  }
-
-  deferredPrompt = null;
-  document.getElementById("installBox").style.display = "none";
-}
 </script>
 </body>
 </html>
-
-
-
