@@ -1,4 +1,4 @@
-const CACHE_NAME = "recursos-biblicos-v1";
+const CACHE_NAME = "recursos-biblicos-v2";
 
 const URLS_TO_CACHE = [
   "/",
